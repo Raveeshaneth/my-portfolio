@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Protest+Revolution&family=Rock+Salt&family=Sawarabi+Gothic&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scroll for anchor jumps */
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+    background: white;
+  }
+
+  .font-protest {
+    font-family: "Protest Revolution", system-ui, sans-serif;
+  }
+
+  .font-cabin {
+    font-family: "Cabin Sketch", system-ui, sans-serif;
+  }
+
+  .font-rockSalt {
+    font-family: "Rock Salt", system-ui, sans-serif;
+  }
+
+  .font-sawarabi {
+    font-family: "Sawarabi Gothic", system-ui, sans-serif;
+  }
+}
+
+/* ===================== */
+/* PANEL SCROLL LAYOUT   */
+/* ===================== */
+
+/* GSAP pins this <main> and animates the panels */
+main {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Each .panel is a full-screen "card" stacked in the same place */
+section.panel {
+  position: absolute;
+  inset: 0; /* top/right/bottom/left = 0 */
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+/* ===================== */
+/* ANIMATIONS            */
+/* ===================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@layer utilities {
+  .animate-scale-in {
+    animation: scaleIn 0.8s ease-out forwards;
+  }
+}
