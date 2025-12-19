@@ -45,16 +45,16 @@ export default function Hero() {
         <div className="w-full max-w-[1600px]">
           
           {/* Mobile Layout: Column */}
-          <div className="lg:hidden flex flex-col items-center text-center space-y-6 pt-4">
+          <div className="lg:hidden flex flex-col items-center text-center space-y-6 pt-20">
             {/* Text First on Mobile */}
             <div className="space-y-4 z-10 w-full">
               {/* Available for Work Badge - Fixed for mobile visibility */}
-              <div className="inline-flex items-center gap-2.5 px-5 py-3 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-xl mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-4">
                 <div className="relative">
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-                  <div className="absolute inset-0 w-2.5 h-2.5 bg-green-400 rounded-full animate-ping" />
+                  <div className="w-2 h-2 bg-green-800 rounded-full animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 bg-green-600 rounded-full animate-ping" />
                 </div>
-                <p className="text-[12px] text-black/80 uppercase tracking-[0.25em] font-bold">
+                <p className="text-[10px] text-black/80 uppercase tracking-[0.2em] font-bold">
                   Available for Work
                 </p>
               </div>
@@ -78,8 +78,8 @@ export default function Hero() {
               {/* CV Download Button */}
               <div className="pt-2">
                 <a 
-                  href="/path-to-your-cv.pdf"
-                  download="Raveesha_Nethmina_CV.pdf"
+                  href="/public/Raveesha Nethmina Gonaduwa CV.pdf"
+                  download="Raveesha Nethmina Gonaduwa CV.pdf"
                   className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-[#3e2723] to-[#4e342e] text-white rounded-full font-semibold hover:from-[#4e342e] hover:to-[#5d4037] transition-all duration-300 hover:scale-105 shadow-xl text-[15px]"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,8 +142,8 @@ export default function Hero() {
 
               {/* CV Download Button */}
               <a 
-                href="/path-to-your-cv.pdf"
-                download="Raveesha_Nethmina_CV.pdf"
+                href="/public/Raveesha Nethmina Gonaduwa CV.pdf"
+                download="Raveesha Nethmina Gonaduwa CV.pdf"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#3e2723] to-[#4e342e] text-white rounded-full font-semibold hover:from-[#4e342e] hover:to-[#5d4037] transition-all duration-300 hover:scale-105 shadow-xl"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +177,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-10">
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-10">
         <span className="text-[10px] uppercase tracking-wider text-black/30 font-medium">Scroll</span>
         <div className="w-[1px] h-12 bg-gradient-to-b from-black/20 to-transparent" />
       </div>

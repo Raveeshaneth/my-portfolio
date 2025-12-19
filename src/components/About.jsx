@@ -1,19 +1,26 @@
+import { useState, useEffect } from "react";
 import aboutBg from "../assets/grid.png";
 
 export default function About() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const skills = [
+    { name: "UI/UX Design", icon: "🎨" },
+    { name: "Frontend Development", icon: "💻" },
+    { name: "Product Design", icon: "📱" },
+    { name: "Interaction Design", icon: "✨" },
+  ];
+
   return (
     <section
       id="about"
-      className="
-        relative
-        w-full
-        h-full
-        overflow-hidden
-        bg-black
-        flex items-center justify-center
-      "
+      className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center"
     >
-      {/* background grid */}
+      {/* Background grid */}
       <div className="absolute inset-0 opacity-[0.15]">
         <img
           src={aboutBg}
@@ -22,49 +29,76 @@ export default function About() {
         />
       </div>
 
-      {/* Gradient overlays */}
+      {/* Gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-950/20 via-transparent to-purple-950/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-      {/* content */}
-      <div className="relative w-full max-w-[1600px] px-6 md:px-12 lg:px-20 py-12 md:py-0">
+      {/* Accent glows */}
+      <div className="absolute top-24 right-24 w-36 h-36 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-32 left-32 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+
+      {/* Content */}
+      <div className="relative w-full max-w-[1400px] px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-4xl">
-          
+
           {/* Header */}
-          <div className="mb-8 md:mb-12 lg:mb-16">
-            <div className="flex items-baseline gap-4 mb-4">
-              <h2 className="font-rockSalt text-[48px] md:text-[64px] lg:text-[80px] xl:text-[96px] leading-none text-white tracking-tight">
+          <div
+            className={`mb-14 transition-all duration-1000 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 className="font-rockSalt text-[48px] md:text-[64px] lg:text-[80px] text-white">
                 About
               </h2>
-              <span className="text-white/50 text-base md:text-lg lg:text-xl font-light">me</span>
+              <span className="text-white/50 text-lg font-light">me</span>
             </div>
-            <div className="h-px bg-white/20 max-w-2xl" />
-          </div>0
+            <div className="h-px bg-gradient-to-r from-white/40 via-white/20 to-transparent max-w-xl" />
+          </div>
 
-          {/* Content */}
-          <div className="space-y-6 md:space-y-8">
-            <p className="font-sawarabi text-[16px] md:text-[20px] lg:text-[24px] xl:text-[26px] leading-relaxed text-white/90 font-light">
-              I'm a software engineering student with a growing passion for
-              UI/UX and frontend development.
-            </p>
-            
-            <p className="font-sawarabi text-[14px] md:text-[16px] lg:text-[18px] xl:text-[20px] leading-relaxed text-white/70 font-light max-w-3xl">
-              I love creating clean, user-friendly interfaces and exploring how real products 
-              are designed and built. As I continue learning, my focus is on blending good 
-              design with smooth, practical interactions so I can build experiences that feel 
-              simple, modern, and intuitive.
+          {/* Main content */}
+          <div
+            className={`space-y-10 transition-all duration-1000 delay-200 ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-6"
+            }`}
+          >
+            <p className="font-sawarabi text-[18px] md:text-[22px] lg:text-[26px] leading-relaxed text-white/95">
+              I'm a{" "}
+              <span className="text-white font-normal">
+                software engineering student
+              </span>{" "}
+              with a strong interest in UI/UX and frontend development.
             </p>
 
-            {/* Skills/Tags */}
-            <div className="flex flex-wrap gap-2 md:gap-3 pt-4">
-              {['UI/UX Design', 'Frontend Development', 'Product Design', 'Interaction Design'].map((skill) => (
-                <span 
-                  key={skill}
-                  className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm text-white/60 border border-white/20 rounded-full backdrop-blur-sm hover:border-white/40 hover:text-white/80 transition-all duration-300"
-                >
-                  {skill}
-                </span>
-              ))}
+            <p className="font-sawarabi text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed text-white/70 max-w-3xl">
+              I enjoy designing clean, modern interfaces and learning how real
+              products are crafted from idea to execution. My goal is to combine
+              thoughtful design with smooth interactions to build experiences
+              that feel simple, intuitive, and meaningful.
+            </p>
+
+            {/* Divider */}
+            <div className="h-px w-24 bg-gradient-to-r from-white/40 to-transparent" />
+
+            {/* Skills */}
+            <div>
+              <h3 className="text-xs uppercase tracking-[0.3em] text-white/50 mb-4">
+                Focus Areas
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {skills.map((skill, index) => (
+                  <span
+                    key={skill.name}
+                    className="px-5 py-2.5 text-sm text-white/70 border border-white/20 rounded-full backdrop-blur-sm hover:border-white/50 hover:text-white transition-all duration-300"
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <span className="mr-2">{skill.icon}</span>
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 

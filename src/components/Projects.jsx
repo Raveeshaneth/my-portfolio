@@ -6,13 +6,13 @@ import desktopIcon from "../assets/java.png";
 import hashtagIcon from "../assets/hashtag.png";
 
 // Import project screenshots
-import project1 from "../assets/project1.png";
-import project2 from "../assets/project2.png";
-import project3 from "../assets/project3.png";
-import project4 from "../assets/project4.png";
-import project5 from "../assets/project5.png";
-import project6 from "../assets/project6.png";
-import project7 from "../assets/project7.png";
+import project1 from "../assets/project1.webp";
+import project2 from "../assets/project2.webp";
+import project3 from "../assets/project3.webp";
+import project4 from "../assets/project4.webp";
+import project5 from "../assets/project5.webp";
+import project6 from "../assets/project6.webp";
+import project7 from "../assets/project7.webp";
 
 const PROJECTS = [
   {
@@ -202,14 +202,14 @@ export default function Projects() {
                     <div className={`
                       relative w-full rounded-lg overflow-visible
                       transition-all duration-500 ease-out
-                      ${isActive ? "ring-3 ring-white shadow-xl scale-110" : "ring-2 ring-white/30 shadow-lg"}
+                      ${isActive ? "ring-3 ring-white shadow-xl scale-110" : "ring-2 ring-black/0 shadow-lg"}
                       group-hover:shadow-2xl group-hover:scale-105
                     `}>
                       
                       {/* Main Card */}
                       <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden">
                         
-                        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
                           <img
                             src={project.icon}
                             alt={project.title}

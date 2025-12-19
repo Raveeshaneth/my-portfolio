@@ -42,8 +42,8 @@ export default function Footer() {
                   Get in touch
                 </a>
                 <a 
-                  href="/Raveesha Nethmina Gonaduwa CV.pdf"
-                  download="Raveesha Nethmina Gonaduwa CV.pdf"
+                  href="/path-to-your-cv.pdf"
+                  download="Raveesha_Nethmina_CV.pdf"
                   className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-105 text-sm md:text-base"
                 >
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,12 +94,15 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             
             {/* Logo */}
-            <div className="flex items-center gap-3">
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            >
               <img src={logo} alt="logo" className="w-8 h-8 md:w-10 md:h-10 object-contain invert" />
               <span className="text-white/60 text-xs md:text-sm">
                 Raveesha Nethmina Gonaduwa
               </span>
-            </div>
+            </button>
 
             {/* Copyright */}
             <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 lg:gap-8 text-xs md:text-sm text-white/40">
