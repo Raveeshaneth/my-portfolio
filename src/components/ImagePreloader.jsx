@@ -72,34 +72,61 @@ const ImagePreloader = ({ onLoadComplete }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-[#3e2723] to-[#1a0e0a] flex flex-col items-center justify-center z-50 transition-opacity duration-500" style={{ opacity: isLoading ? 1 : 0 }}>
-      {/* Logo */}
-      <div className="mb-12">
-        <h1 className="font-protest text-4xl md:text-5xl text-white tracking-tight">
-          <span className="text-[#a1887f]">Loading</span>
-        </h1>
+    <div className="fixed inset-0 bg-gradient-to-br from-[#2a1810] via-[#3e2723] to-[#1a0e0a] flex flex-col items-center justify-center z-50 transition-all duration-700" style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? 'auto' : 'none' }}>
+      {/* Animated background circles */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#6d4c41]/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#8d6e63]/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-64 md:w-80 mb-8">
-        <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-[#8d6e63] to-[#a1887f] transition-all duration-300 ease-out rounded-full"
-            style={{ width: `${progress}%` }}
-          />
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        {/* Logo/Icon */}
+        <div className="mb-8">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#8d6e63] to-[#6d4c41] flex items-center justify-center shadow-2xl">
+            <span className="text-3xl">✨</span>
+          </div>
         </div>
-      </div>
 
-      {/* Progress Text */}
-      <p className="text-white/70 text-sm font-rockSalt">
-        {Math.round(progress)}%
-      </p>
+        {/* Main Title */}
+        <h1 className="font-protest text-4xl md:text-5xl text-white tracking-tight mb-2 text-center">
+          Raveesha
+        </h1>
+        <p className="text-white/60 font-rockSalt text-sm md:text-base mb-12 text-center">
+          UI/UX Designer & Frontend Developer
+        </p>
 
-      {/* Loading dots animation */}
-      <div className="mt-12 flex gap-2">
-        <div className="w-2 h-2 bg-[#a1887f] rounded-full animate-bounce" />
-        <div className="w-2 h-2 bg-[#a1887f] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-        <div className="w-2 h-2 bg-[#a1887f] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+        {/* Progress Bar Container */}
+        <div className="w-72 md:w-96 mb-8">
+          {/* Background bar */}
+          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm border border-white/20 mb-4">
+            {/* Progress fill */}
+            <div
+              className="h-full bg-gradient-to-r from-[#a1887f] via-[#8d6e63] to-[#6d4c41] transition-all duration-300 ease-out rounded-full shadow-lg"
+              style={{ width: `${progress}%`, boxShadow: `0 0 20px rgba(141, 110, 99, 0.5)` }}
+            />
+          </div>
+
+          {/* Progress text */}
+          <div className="flex justify-between items-center px-2">
+            <p className="text-white/50 text-xs font-rockSalt">Loading assets</p>
+            <p className="text-white/70 text-sm font-semibold font-rockSalt">
+              {Math.round(progress)}%
+            </p>
+          </div>
+        </div>
+
+        {/* Loading dots */}
+        <div className="flex gap-3 justify-center mt-12">
+          <div className="w-3 h-3 bg-gradient-to-b from-[#a1887f] to-[#8d6e63] rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+          <div className="w-3 h-3 bg-gradient-to-b from-[#8d6e63] to-[#6d4c41] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+          <div className="w-3 h-3 bg-gradient-to-b from-[#6d4c41] to-[#4e342e] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+        </div>
+
+        {/* Status text */}
+        <p className="text-white/40 text-xs font-rockSalt mt-8 tracking-wider">
+          {progress < 30 ? 'Initializing...' : progress < 70 ? 'Loading media...' : 'Finalizing...'}
+        </p>
       </div>
     </div>
   );
