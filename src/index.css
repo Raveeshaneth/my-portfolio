@@ -129,76 +129,77 @@ section.panel {
     animation: scaleIn 0.8s ease-out forwards;
   }
 }/* ======================================= */
-/* SIMPLE LOADING SCREEN - Add to index.css */
+/* ======================================= */
+/* LOADING SCREEN ANIMATIONS - Add to index.css */
 /* ======================================= */
 
-@keyframes bounceBall {
-  0%, 100% {
-    top: -40px;
-    animation-timing-function: ease-in;
-  }
-  50% {
-    top: 50%;
-    transform: translate(-50%, -50%);
-    animation-timing-function: ease-out;
-  }
-}
-
-/* Alternative bounce with scale effect */
-@keyframes bounceBallScale {
-  0%, 100% {
-    top: -40px;
-    transform: translate(-50%, 0) scale(1);
-    animation-timing-function: ease-in;
-  }
-  45% {
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    animation-timing-function: ease-out;
-  }
-  50% {
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1.1, 0.9);
-  }
-  55% {
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* If you want the ball to bounce more realistically, use this instead */
-@keyframes realisticBounce {
+@keyframes shimmer {
   0% {
-    top: -40px;
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
-  }
-  50% {
-    top: 50%;
-    transform: translate(-50%, -50%);
-    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    transform: translateX(-100%);
   }
   100% {
-    top: -40px;
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    transform: translateX(100%);
   }
 }
 
-/* Highlight pulse animation for Get in touch button */
-@keyframes highlightPulse {
-  0% {
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
   50% {
-    background-color: rgb(200, 200, 200);
-    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.2);
-  }
-  100% {
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-20px);
   }
 }
 
-.highlight-pulse {
-  animation: highlightPulse 0.8s ease-in-out 3 !important;
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fadeInScale {
+  animation: fadeInScale 0.6s ease-out forwards;
+}
+
+/* Smooth entrance for loading elements */
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+/* Pulse glow effect for loading logo */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(141, 110, 99, 0.3), 0 0 40px rgba(141, 110, 99, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(141, 110, 99, 0.5), 0 0 60px rgba(141, 110, 99, 0.3);
+  }
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 2s ease-in-out infinite;
 }
