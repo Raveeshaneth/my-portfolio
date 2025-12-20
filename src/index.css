@@ -49,7 +49,6 @@ section.panel {
 /* Optimize images */
 img {
   contain: layout style paint;
-  loading: lazy;
 }
 
 /* Reduce animation on low-power devices */
@@ -130,7 +129,6 @@ section.panel {
     animation: scaleIn 0.8s ease-out forwards;
   }
 }/* ======================================= */
-//* ======================================= */
 /* SIMPLE LOADING SCREEN - Add to index.css */
 /* ======================================= */
 
@@ -183,4 +181,24 @@ section.panel {
     top: -40px;
     animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
   }
+}
+
+/* Highlight pulse animation for Get in touch button */
+@keyframes highlightPulse {
+  0% {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    background-color: rgb(200, 200, 200);
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+.highlight-pulse {
+  animation: highlightPulse 0.8s ease-in-out 3 !important;
 }

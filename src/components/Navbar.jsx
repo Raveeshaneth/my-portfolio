@@ -12,12 +12,28 @@ export default function Navbar() {
       scrollTarget = viewportHeight;
     } else if (sectionId === 'projects') {
       scrollTarget = viewportHeight * 2;
+    } else if (sectionId === 'contact') {
+      const footerElement = document.querySelector('footer');
+      if (footerElement) {
+        scrollTarget = footerElement.offsetTop;
+      }
     }
     
     window.scrollTo({
       top: scrollTarget,
       behavior: 'smooth'
     });
+
+    // Highlight the Get in touch button if scrolling to contact
+    if (sectionId === 'contact') {
+      setTimeout(() => {
+        const button = document.getElementById('get-in-touch-btn');
+        if (button) {
+          button.classList.add('highlight-pulse');
+          setTimeout(() => button.classList.remove('highlight-pulse'), 3000);
+        }
+      }, 600);
+    }
   }, []);
 
   useEffect(() => {
@@ -84,6 +100,12 @@ export default function Navbar() {
           className={linkClass}
         >
           Projects
+        </button>
+        <button 
+          onClick={() => scrollToSection('contact')}
+          className={linkClass}
+        >
+          Contact
         </button>
       </div>
     </nav>

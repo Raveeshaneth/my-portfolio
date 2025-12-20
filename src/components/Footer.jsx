@@ -36,6 +36,7 @@ export default function Footer() {
               </p>
               <div className="flex flex-wrap gap-3 md:gap-4">
                 <a 
+                  id="get-in-touch-btn"
                   href="mailto:raveeshanethmina@gmail.com"
                   className="inline-block px-6 md:px-8 py-3 md:py-4 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 hover:scale-105 text-sm md:text-base"
                 >

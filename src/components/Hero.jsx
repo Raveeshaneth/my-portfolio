@@ -47,7 +47,7 @@ export default function Hero() {
         <div className="w-full max-w-[1600px]">
           
           {/* Mobile Layout: Column */}
-          <div className="lg:hidden flex flex-col items-center text-center space-y-6 pt-20">
+          <div className="lg:hidden flex flex-col items-center text-center space-y-6 pt-8">
             {/* Text First on Mobile */}
             <div className="space-y-4 z-10 w-full">
               {/* Available for Work Badge - Fixed for mobile visibility */}
