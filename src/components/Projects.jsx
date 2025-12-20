@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 import androidIcon from "../assets/android.png";
 import figmaIcon from "../assets/figma.png";
@@ -101,29 +101,125 @@ const PROJECTS = [
   },
 ];
 
+// Memoized project card component
+const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, onProjectChange }) => {
+  const handleClick = useCallback(() => {
+    if (!isTransitioning && index !== activeIndex) {
+      onProjectChange(index);
+    }
+  }, [index, activeIndex, isTransitioning, onProjectChange]);
+
+  return (
+    <div
+      className="group w-full cursor-pointer"
+      onClick={handleClick}
+    >
+      <div className={`
+        relative w-full rounded-lg overflow-visible
+        transition-all duration-500 ease-out
+        ${isActive ? "ring-3 ring-white shadow-xl scale-110" : "ring-2 ring-black/0 shadow-lg"}
+        group-hover:shadow-2xl group-hover:scale-105
+      `}>
+        
+        {/* Main Card */}
+        <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden">
+          
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+            <img
+              src={project.icon}
+              alt={project.title}
+              className="w-10 h-10 md:w-12 md:h-12 object-contain opacity-100 transition-all duration-500 group-hover:scale-125 group-hover:opacity-60 invert"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to top, ${project.color}DD 0%, ${project.color}40 30%, transparent 60%)`
+            }}
+          />
+
+          <div className="absolute bottom-0 left-0 right-0 p-1.5 md:p-2">
+            <h4 className="text-[10px] md:text-xs font-medium text-white leading-tight mb-0.5 line-clamp-2">
+              {project.title}
+            </h4>
+            <p className="text-[8px] md:text-[10px] text-white/90">
+              {project.subtitle}
+            </p>
+          </div>
+
+          {isActive && (
+            <div 
+              className="absolute bottom-0 left-0 right-0 h-0.5 z-20"
+              style={{ backgroundColor: project.color }}
+            />
+          )}
+        </div>
+
+        {/* Description Tooltip - Appears ABOVE on hover */}
+        <div 
+          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 w-48 md:w-56"
+        >
+          <div 
+            className="relative p-3 md:p-4 rounded-xl shadow-2xl"
+            style={{ 
+              backgroundColor: project.color,
+            }}
+          >
+            <div className="absolute inset-0 bg-black/80 rounded-xl backdrop-blur-sm" />
+            <p className="relative z-10 text-[11px] md:text-xs text-white font-semibold leading-relaxed text-center">
+              {project.description}
+            </p>
+            
+            {/* Arrow pointing DOWN (since tooltip is above) */}
+            <div 
+              className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45"
+              style={{ backgroundColor: project.color }}
+            >
+              <div className="absolute inset-0 bg-white/90" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  useEffect(() => {
-    const handleProjectChange = (e) => {
-      if (isTransitioning) return;
-      
-      const newIndex = e.detail.index;
-      if (newIndex !== activeIndex) {
-        setIsTransitioning(true);
-        setActiveIndex(newIndex);
-        
-        setTimeout(() => setIsTransitioning(false), 400);
-      }
-    };
+  const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
 
-    window.addEventListener("projectIndexChange", handleProjectChange);
-    return () =>
-      window.removeEventListener("projectIndexChange", handleProjectChange);
+  const handleProjectChange = useCallback((e) => {
+    if (isTransitioning) return;
+    
+    const newIndex = e.detail.index;
+    if (newIndex !== activeIndex) {
+      setIsTransitioning(true);
+      setActiveIndex(newIndex);
+      
+      setTimeout(() => setIsTransitioning(false), 400);
+    }
   }, [activeIndex, isTransitioning]);
 
-  const activeProject = PROJECTS[activeIndex];
+  const handleCardClick = useCallback((index) => {
+    if (!isTransitioning && index !== activeIndex) {
+      setActiveIndex(index);
+      window.dispatchEvent(
+        new CustomEvent("projectIndexChange", {
+          detail: { index },
+        })
+      );
+    }
+  }, [activeIndex, isTransitioning]);
+
+  useEffect(() => {
+    window.addEventListener("projectIndexChange", handleProjectChange);
+    return () => window.removeEventListener("projectIndexChange", handleProjectChange);
+  }, [handleProjectChange]);
 
   return (
     <section
@@ -182,93 +278,17 @@ export default function Projects() {
           {/* Cards positioned at the absolute bottom */}
           <div className="absolute bottom-6 md:bottom-8 left-6 md:left-12 lg:left-20 right-6 md:right-12 lg:right-20">
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 md:gap-3 items-start">
-              {PROJECTS.map((project, index) => {
-                const isActive = index === activeIndex;
-
-                return (
-                  <div
-                    key={project.id}
-                    className="group w-full cursor-pointer"
-                    onClick={() => {
-                      if (isTransitioning || index === activeIndex) return;
-                      setActiveIndex(index);
-                      window.dispatchEvent(
-                        new CustomEvent("projectIndexChange", {
-                          detail: { index },
-                        })
-                      );
-                    }}
-                  >
-                    <div className={`
-                      relative w-full rounded-lg overflow-visible
-                      transition-all duration-500 ease-out
-                      ${isActive ? "ring-3 ring-white shadow-xl scale-110" : "ring-2 ring-black/0 shadow-lg"}
-                      group-hover:shadow-2xl group-hover:scale-105
-                    `}>
-                      
-                      {/* Main Card */}
-                      <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden">
-                        
-                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-                          <img
-                            src={project.icon}
-                            alt={project.title}
-                            className="w-10 h-10 md:w-12 md:h-12 object-contain opacity-100 transition-all duration-500 group-hover:scale-125 group-hover:opacity-60 invert"
-                          />
-                        </div>
-
-                        <div 
-                          className="absolute inset-0"
-                          style={{
-                            background: `linear-gradient(to top, ${project.color}DD 0%, ${project.color}40 30%, transparent 60%)`
-                          }}
-                        />
-
-                        <div className="absolute bottom-0 left-0 right-0 p-1.5 md:p-2">
-                          <h4 className="text-[10px] md:text-xs font-medium text-white leading-tight mb-0.5 line-clamp-2">
-                            {project.title}
-                          </h4>
-                          <p className="text-[8px] md:text-[10px] text-white/90">
-                            {project.subtitle}
-                          </p>
-                        </div>
-
-                        {isActive && (
-                          <div 
-                            className="absolute bottom-0 left-0 right-0 h-0.5 z-20"
-                            style={{ backgroundColor: project.color }}
-                          />
-                        )}
-                      </div>
-
-                      {/* Description Tooltip - Appears ABOVE on hover */}
-                      <div 
-                        className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 w-48 md:w-56"
-                      >
-                        <div 
-                          className="relative p-3 md:p-4 rounded-xl shadow-2xl"
-                          style={{ 
-                            backgroundColor: project.color,
-                          }}
-                        >
-                          <div className="absolute inset-0 bg-black/80 rounded-xl backdrop-blur-sm" />
-                          <p className="relative z-10 text-[11px] md:text-xs text-white font-semibold leading-relaxed text-center">
-                            {project.description}
-                          </p>
-                          
-                          {/* Arrow pointing DOWN (since tooltip is above) */}
-                          <div 
-                            className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45"
-                            style={{ backgroundColor: project.color }}
-                          >
-                            <div className="absolute inset-0 bg-white/90" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {PROJECTS.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  isActive={index === activeIndex}
+                  index={index}
+                  activeIndex={activeIndex}
+                  isTransitioning={isTransitioning}
+                  onProjectChange={handleCardClick}
+                />
+              ))}
             </div>
             </div>
           </div>

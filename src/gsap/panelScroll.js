@@ -3,18 +3,21 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+let scrollTriggerInstance = null;
+
 export function setupPanelScroll() {
   const panels = gsap.utils.toArray("section.panel");
 
   if (!panels || panels.length < 2) return;
 
-  // Clear any existing ScrollTriggers
+  // Kill existing ScrollTrigger to prevent memory leaks
+  if (scrollTriggerInstance) {
+    scrollTriggerInstance.kill();
+  }
   ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
   // Start with all panels except first below the viewport
   gsap.set(panels.slice(1), { yPercent: 100 });
-  
-  // Make sure first panel is visible
   gsap.set(panels[0], { yPercent: 0 });
 
   const tl = gsap.timeline({
@@ -34,13 +37,22 @@ export function setupPanelScroll() {
   });
 
   // Hold Projects section while projects cycle through
-  // We need 6 transitions between 7 projects (0->1, 1->2, 2->3, 3->4, 4->5, 5->6)
-  // Plus a bit extra to ensure project 6 (last one) fully shows
   tl.to({}, { duration: 7 });
 
-  const totalSteps = 9; // 1 + 1 + 7
+  const totalSteps = 9;
 
-  ScrollTrigger.create({
+  // Debounce project index updates
+  let lastDispatchedIndex = -1;
+  const dispatchProjectChange = (index) => {
+    if (lastDispatchedIndex !== index) {
+      lastDispatchedIndex = index;
+      window.dispatchEvent(new CustomEvent('projectIndexChange', { 
+        detail: { index } 
+      }));
+    }
+  };
+
+  scrollTriggerInstance = ScrollTrigger.create({
     trigger: "main",
     animation: tl,
     start: "top top",
@@ -58,36 +70,35 @@ export function setupPanelScroll() {
     },
     onUpdate: (self) => {
       const progress = self.progress;
-      
-      // Projects section appears at 2/9 and ends at 9/9
       const projectsStart = 2 / 9;
       
       if (progress >= projectsStart) {
-        // Normalize progress within projects section (0 to 1)
         const projectProgress = (progress - projectsStart) / (1 - projectsStart);
-        
-        // We have 7 projects (indices 0-6)
-        // Divide the progress into 7 equal segments
         const rawIndex = projectProgress * 7;
         const projectIndex = Math.min(Math.floor(rawIndex), 6);
-        
-        // Debug log (remove in production)
-        console.log('Progress:', progress.toFixed(3), 'Project:', projectIndex, 'Raw:', rawIndex.toFixed(3));
-        
-        // Dispatch custom event to update active project
-        window.dispatchEvent(new CustomEvent('projectIndexChange', { 
-          detail: { index: projectIndex } 
-        }));
+        dispatchProjectChange(projectIndex);
       } else {
-        // Before projects section, show first project
-        window.dispatchEvent(new CustomEvent('projectIndexChange', { 
-          detail: { index: 0 } 
-        }));
+        dispatchProjectChange(0);
       }
     }
   });
 
-  window.addEventListener("resize", () => {
-    ScrollTrigger.refresh();
-  });
+  // Throttle resize to prevent excessive recalculations
+  let resizeTimeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  // Return cleanup function
+  return () => {
+    window.removeEventListener("resize", handleResize);
+    if (scrollTriggerInstance) {
+      scrollTriggerInstance.kill();
+    }
+  };
 }

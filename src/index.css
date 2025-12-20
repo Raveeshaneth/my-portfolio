@@ -36,6 +36,32 @@ html {
 }
 
 /* ===================== */
+/* PERFORMANCE OPTIMIZATIONS */
+/* ===================== */
+
+/* GPU acceleration for animations */
+section.panel {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Optimize images */
+img {
+  contain: layout style paint;
+  loading: lazy;
+}
+
+/* Reduce animation on low-power devices */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===================== */
 /* PANEL SCROLL LAYOUT   */
 /* ===================== */
 

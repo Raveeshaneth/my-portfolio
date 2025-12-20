@@ -18,25 +18,27 @@ export default function Hero() {
           src={grid}
           alt="grid background"
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         /> 
       </div>
 
-      {/* Sparkles/Paint dots spread across screen */}
+      {/* Sparkles/Paint dots - Reduced animations for performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top left sparkle */}
-        <div className="absolute top-[15%] left-[8%] w-2 h-2 bg-[#8d6e63] rounded-full opacity-40 animate-pulse" style={{ animationDuration: '3s' }} />
+        <div className="absolute top-[15%] left-[8%] w-2 h-2 bg-[#8d6e63] rounded-full opacity-40" style={{ animation: 'pulse 6s ease-in-out infinite' }} />
         <div className="absolute top-[15%] left-[8%] w-3 h-3 border border-[#8d6e63] rounded-full opacity-20" />
         
         {/* Top right sparkle */}
-        <div className="absolute top-[25%] right-[12%] w-2.5 h-2.5 bg-[#a1887f] rounded-full opacity-40 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+        <div className="absolute top-[25%] right-[12%] w-2.5 h-2.5 bg-[#a1887f] rounded-full opacity-40" style={{ animation: 'pulse 8s ease-in-out infinite 1s' }} />
         <div className="absolute top-[25%] right-[12%] w-4 h-4 border border-[#a1887f] rounded-full opacity-20" />
         
         {/* Middle left sparkle */}
-        <div className="absolute top-[60%] left-[15%] w-2 h-2 bg-[#6d4c41] rounded-full opacity-40 animate-pulse" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} />
+        <div className="absolute top-[60%] left-[15%] w-2 h-2 bg-[#6d4c41] rounded-full opacity-40" style={{ animation: 'pulse 7s ease-in-out infinite 0.5s' }} />
         <div className="absolute top-[60%] left-[15%] w-3.5 h-3.5 border border-[#6d4c41] rounded-full opacity-20" />
         
         {/* Bottom right sparkle */}
-        <div className="absolute bottom-[20%] right-[20%] w-2 h-2 bg-[#8d6e63] rounded-full opacity-40 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1.5s' }} />
+        <div className="absolute bottom-[20%] right-[20%] w-2 h-2 bg-[#8d6e63] rounded-full opacity-40" style={{ animation: 'pulse 8s ease-in-out infinite 1.5s' }} />
         <div className="absolute bottom-[20%] right-[20%] w-3 h-3 border border-[#8d6e63] rounded-full opacity-20" />
       </div>
 
@@ -49,10 +51,10 @@ export default function Hero() {
             {/* Text First on Mobile */}
             <div className="space-y-4 z-10 w-full">
               {/* Available for Work Badge - Fixed for mobile visibility */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-4 will-change-auto">
                 <div className="relative">
-                  <div className="w-2 h-2 bg-green-800 rounded-full animate-pulse" />
-                  <div className="absolute inset-0 w-2 h-2 bg-green-600 rounded-full animate-ping" />
+                  <div className="w-2 h-2 bg-green-800 rounded-full" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
+                  <div className="absolute inset-0 w-2 h-2 bg-green-600 rounded-full" style={{ animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite' }} />
                 </div>
                 <p className="text-[10px] text-black/80 uppercase tracking-[0.2em] font-bold">
                   Available for Work
@@ -93,12 +95,14 @@ export default function Hero() {
             {/* Illustration After on Mobile */}
             <div className="relative w-full max-w-[320px] md:max-w-[380px] mt-6">
               {/* Darker brown glow for mobile */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6d4c41]/25 via-[#8d6e63]/20 to-[#a1887f]/15 rounded-full blur-3xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#6d4c41]/25 via-[#8d6e63]/20 to-[#a1887f]/15 rounded-full blur-3xl will-change-auto" />
               
               <img
                 src={illustrater}
                 alt="Raveesha illustration"
                 className="relative w-full h-auto object-contain"
+                loading="lazy"
+                decoding="async"
                 style={{
                   filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.1))'
                 }}
@@ -113,8 +117,8 @@ export default function Hero() {
             <div className="space-y-8 z-10">
               <div className="space-y-3">
                 {/* Available for Work Badge - Better positioned */}
-                <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-full border border-black/10 shadow-lg mb-4">
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-full border border-black/10 shadow-lg mb-4 will-change-auto">
+                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
                   <p className="text-[11px] text-black/75 uppercase tracking-[0.25em] font-bold">
                     Available for Work
                   </p>
@@ -156,16 +160,14 @@ export default function Hero() {
             {/* Right: Illustration */}
             <div className="relative flex items-end justify-end self-end pb-0" style={{ marginBottom: '-90px' }}>
               {/* Darker brown glow effect behind illustration */}
-              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#6d4c41]/30 via-[#8d6e63]/25 to-[#a1887f]/20 rounded-full blur-3xl" />
-              
-              {/* Darker brown floating elements */}
-              <div className="absolute top-20 right-10 w-20 h-20 bg-[#6d4c41]/20 rounded-2xl rotate-12 animate-float" />
-              <div className="absolute top-40 right-60 w-16 h-16 bg-[#8d6e63]/20 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#6d4c41]/30 via-[#8d6e63]/25 to-[#a1887f]/20 rounded-full blur-3xl will-change-auto" />
               
               <img
                 src={illustrater}
                 alt="Raveesha illustration"
                 className="relative w-[480px] xl:w-[560px] 2xl:w-[520px] h-auto object-contain object-bottom"
+                loading="lazy"
+                decoding="async"
                 style={{
                   filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.1))',
                 }}
@@ -177,7 +179,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-10">
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10" style={{ animation: 'bounce 2s infinite' }}>
         <span className="text-[10px] uppercase tracking-wider text-black/30 font-medium">Scroll</span>
         <div className="w-[1px] h-12 bg-gradient-to-b from-black/20 to-transparent" />
       </div>

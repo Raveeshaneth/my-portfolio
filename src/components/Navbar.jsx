@@ -1,32 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Only show navbar when at the very top (within 50px)
-      if (currentScrollY < 50) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Check initial position
-    handleScroll();
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = useCallback((sectionId) => {
     const viewportHeight = window.innerHeight;
     
     let scrollTarget = 0;
@@ -40,13 +18,30 @@ export default function Navbar() {
       top: scrollTarget,
       behavior: 'smooth'
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(window.scrollY < 50);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const linkClass =
     "font-rockSalt text-[15px] transition-all duration-300 ease-out cursor-pointer " +
     "hover:text-[16px] hover:[-webkit-text-stroke:0.1px_black] " +
     "hover:[text-shadow:0px_6px_3px_rgba(0,0,0,0.25)] " +
     "active:scale-95 touch-none select-none";
+
+  const handleLogoClick = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   return (
     <nav
@@ -63,10 +58,17 @@ export default function Navbar() {
     >
       {/* Left: Logo */}
       <button 
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="cursor-pointer"
+        onClick={handleLogoClick}
+        className="cursor-pointer will-change-transform"
+        aria-label="Back to top"
       >
-        <img src={logo} alt="logo" className="w-10 h-10 object-contain" />
+        <img 
+          src={logo} 
+          alt="logo" 
+          className="w-10 h-10 object-contain" 
+          loading="eager"
+          decoding="async"
+        />
       </button>
 
       {/* Right: menu links */}
