@@ -13,13 +13,13 @@ export default function Hero() {
       "
     >
       {/* background grid */}
-      <div className="absolute inset-0 opacity-[0.04]">
+      <div className="absolute inset-0 opacity-[0.08]">
         <img
           src={grid}
           alt="grid background"
           className="w-full h-full object-cover"
-          loading="lazy"
-          decoding="async"
+          loading="eager"
+          decoding="sync"
         /> 
       </div>
 
@@ -101,8 +101,8 @@ export default function Hero() {
                 src={illustrater}
                 alt="Raveesha illustration"
                 className="relative w-full h-auto object-contain"
-                loading="lazy"
-                decoding="async"
+                loading="eager"
+                decoding="sync"
                 style={{
                   filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.1))'
                 }}
@@ -160,14 +160,19 @@ export default function Hero() {
             {/* Right: Illustration */}
             <div className="relative flex items-end justify-end self-end pb-0" style={{ marginBottom: '-90px' }}>
               {/* Darker brown glow effect behind illustration */}
-              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#6d4c41]/30 via-[#8d6e63]/25 to-[#a1887f]/20 rounded-full blur-3xl will-change-auto" />
+              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#6d4c41]/30 via-[#8d6e63]/25 to-[#a1887f]/20 rounded-full blur-3xl" />
+              
+              {/* Extra glow layers for more depth */}
+              <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-[#8d6e63]/20 via-[#a1887f]/15 to-transparent rounded-full blur-3xl" style={{ marginRight: '-100px', marginBottom: '-100px' }} />
+              <div className="absolute top-20 right-10 w-20 h-20 bg-[#6d4c41]/20 rounded-2xl blur-2xl" />
+              <div className="absolute top-40 right-60 w-16 h-16 bg-[#8d6e63]/15 rounded-full blur-2xl" />
               
               <img
                 src={illustrater}
                 alt="Raveesha illustration"
                 className="relative w-[480px] xl:w-[560px] 2xl:w-[520px] h-auto object-contain object-bottom"
-                loading="lazy"
-                decoding="async"
+                loading="eager"
+                decoding="sync"
                 style={{
                   filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.1))',
                 }}
