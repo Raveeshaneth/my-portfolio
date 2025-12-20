@@ -16,6 +16,9 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1000,
     minify: 'esbuild',
+    assetsInlineLimit: 4096,
+    // Optimize images during build
+    assetsDir: 'assets',
   },
   server: {
     headers: {
