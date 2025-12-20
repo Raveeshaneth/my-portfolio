@@ -190,8 +190,6 @@ const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, o
 export default function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageLoading, setImageLoading] = useState(true);
 
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
 
@@ -200,8 +198,6 @@ export default function Projects() {
     
     const newIndex = e.detail.index;
     if (newIndex !== activeIndex) {
-      setImageLoading(true);
-      setImageLoaded(false);
       setIsTransitioning(true);
       setActiveIndex(newIndex);
       
@@ -211,8 +207,6 @@ export default function Projects() {
 
   const handleCardClick = useCallback((index) => {
     if (!isTransitioning && index !== activeIndex) {
-      setImageLoading(true);
-      setImageLoaded(false);
       setActiveIndex(index);
       window.dispatchEvent(
         new CustomEvent("projectIndexChange", {
@@ -221,11 +215,6 @@ export default function Projects() {
       );
     }
   }, [activeIndex, isTransitioning]);
-
-  const handleImageLoad = useCallback(() => {
-    setImageLoading(false);
-    setTimeout(() => setImageLoaded(true), 50);
-  }, []);
 
   useEffect(() => {
     window.addEventListener("projectIndexChange", handleProjectChange);
@@ -239,34 +228,20 @@ export default function Projects() {
     >
       <div className="relative h-full w-full">
         
-        {/* Background with lazy loading */}
+        {/* Background with preloaded images */}
         <div className="absolute inset-0">
-          {/* Loading skeleton/blur effect */}
-          {imageLoading && (
-            <div 
-              className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse will-change-opacity"
-              style={{ opacity: isTransitioning ? 0.7 : 1 }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-            </div>
-          )}
-          
-          {/* Actual background image with fade-in */}
-          <img
-            src={activeProject.image}
-            alt={activeProject.title}
-            className={`
-              absolute inset-0 w-full h-full object-cover
-              transition-all duration-500 ease-out
-              ${imageLoaded ? 'opacity-100' : 'opacity-0'}
-            `}
-            onLoad={handleImageLoad}
-            loading="eager"
-            decoding="async"
-          />
-          
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+          {/* Direct image display - no loading needed */}
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-500 ease-out"
+            style={{ 
+              backgroundImage: `url(${activeProject.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: isTransitioning ? 0.7 : 1
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+          </div>
         </div>
 
         <div className="relative h-full flex flex-col px-6 md:px-12 lg:px-20 py-12 md:py-16">

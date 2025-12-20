@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setupPanelScroll } from "./gsap/panelScroll";
+import ImagePreloader from "./components/ImagePreloader";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -8,9 +9,17 @@ import Projects from "./components/Projects";
 import Footer from "./components/Footer";
 
 export default function App() {
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
   useEffect(() => {
-    setupPanelScroll();
-  }, []);
+    if (imagesLoaded) {
+      setupPanelScroll();
+    }
+  }, [imagesLoaded]);
+
+  if (!imagesLoaded) {
+    return <ImagePreloader onLoadComplete={() => setImagesLoaded(true)} />;
+  }
 
   return (
     <div className="bg-white">
