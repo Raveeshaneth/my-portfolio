@@ -1,5 +1,5 @@
 import grid from "../assets/grid.png";
-import illustrater from "../assets/illustrater.png";
+import illustrater from "../assets/illustrater.webp";
 
 export default function Hero() {
   return (
