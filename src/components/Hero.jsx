@@ -18,7 +18,7 @@ export default function Hero() {
           src={grid}
           alt="grid background"
           className="w-full h-full object-cover"
-        />
+        /> 
       </div>
 
       {/* Sparkles/Paint dots spread across screen */}
@@ -131,7 +131,7 @@ export default function Hero() {
               
               <div className="space-y-3">
                 <p className="font-rockSalt text-[32px] xl:text-[36px] text-black/85 leading-tight">
-                  Hi, <span className="bg-gradient-to-r from-gray-800 to-[#6d4c41] bg-clip-text text-transparent">I'm Raveesha</span>
+                  Hi,<span className="bg-gradient-to-r from-gray-800 to-[#6d4c41] bg-clip-text text-transparent"> I'm Raveesha</span>
                 </p>
                 <p className="text-lg text-black/60 max-w-lg leading-relaxed">
                   A second-year <span className="font-semibold text-black/70">Software Engineering</span> undergraduate at <span className="font-semibold text-black/70">NIBM</span>, passionate about creating 
