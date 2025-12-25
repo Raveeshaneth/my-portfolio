@@ -43,7 +43,7 @@ export default function Footer() {
                   Get in touch
                 </a>
                 <a 
-                  href="/path-to-your-cv.pdf"
+                  href="/Raveesha Nethmina Gonaduwa CV.pdf"
                   download="Raveesha_Nethmina_CV.pdf"
                   className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-105 text-sm md:text-base"
                 >

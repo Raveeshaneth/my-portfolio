@@ -80,7 +80,7 @@ export default function Hero() {
               {/* CV Download Button */}
               <div className="pt-2">
                 <a 
-                  href="/public/Raveesha Nethmina Gonaduwa CV.pdf"
+                  href="/Raveesha Nethmina Gonaduwa CV.pdf"
                   download="Raveesha Nethmina Gonaduwa CV.pdf"
                   className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-[#3e2723] to-[#4e342e] text-white rounded-full font-semibold hover:from-[#4e342e] hover:to-[#5d4037] transition-all duration-300 hover:scale-105 shadow-xl text-[15px]"
                 >
@@ -146,7 +146,7 @@ export default function Hero() {
 
               {/* CV Download Button */}
               <a 
-                href="/public/Raveesha Nethmina Gonaduwa CV.pdf"
+                href="/Raveesha Nethmina Gonaduwa CV.pdf"
                 download="Raveesha Nethmina Gonaduwa CV.pdf"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#3e2723] to-[#4e342e] text-white rounded-full font-semibold hover:from-[#4e342e] hover:to-[#5d4037] transition-all duration-300 hover:scale-105 shadow-xl"
               >
