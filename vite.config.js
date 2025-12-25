@@ -10,7 +10,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'gsap': ['gsap'],
-          'lenis': ['@studio-freight/lenis'],
+          'lenis': ['lenis'],
         },
       },
     },
