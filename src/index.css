@@ -207,18 +207,22 @@ section.panel {
 /* Highlight pulse effect for Get in touch button */
 @keyframes highlightPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8), inset 0 0 0 0 rgba(255, 255, 255, 0.2);
     transform: scale(1);
+    background-color: rgb(255, 255, 255);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0), inset 0 0 10px 5px rgba(255, 255, 255, 0.4);
+    transform: scale(1.08);
+    background-color: rgb(255, 255, 255);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
     transform: scale(1);
+    background-color: rgb(255, 255, 255);
   }
 }
 
 .highlight-pulse {
-  animation: highlightPulse 0.8s ease-out 2;
+  animation: highlightPulse 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 4;
 }
