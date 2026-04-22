@@ -12,7 +12,7 @@ import project4 from "../assets/project4.webp";
 import project5 from "../assets/project5.webp";
 import project6 from "../assets/project6.webp";
 import project7 from "../assets/project7.webp";
-import project8 from "../assets/project7.webp";
+import project8 from "../assets/project8.webp";
 
 const PROJECTS = [
   {
@@ -137,77 +137,73 @@ const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, o
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
-    if (!isTransitioning && index !== activeIndex) {
-      onProjectChange(index);
-    }
+    if (!isTransitioning && index !== activeIndex) onProjectChange(index);
   }, [index, activeIndex, isTransitioning, onProjectChange]);
 
   return (
-    // flex:1 so cards share available width equally; minWidth prevents them
-    // from going too narrow on small screens; no flex-shrink-0
     <div
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="relative cursor-pointer transition-all duration-300 ease-out"
       style={{
+        // Each card takes equal share of strip width
         flex: "1 1 0",
-        minWidth: "70px",
-        maxWidth: "160px",
-        // active card lifts UP — clipping is handled by paddingTop on the strip
-        transform: isActive ? "translateY(-12px)" : "translateY(0px)",
+        minWidth: 0,
+        transform: isActive ? "translateY(-10px)" : "translateY(0px)",
       }}
     >
       <div
-        className="relative rounded-2xl overflow-hidden transition-all duration-300"
+        className="relative rounded-xl overflow-hidden transition-all duration-300"
         style={{
           aspectRatio: "3/4",
-          opacity: isActive ? 1 : isHovered ? 0.88 : 0.45,
+          opacity: isActive ? 1 : isHovered ? 0.85 : 0.42,
           filter: isActive
             ? "none"
             : isHovered
             ? "grayscale(0%) brightness(1.3)"
-            : "grayscale(50%) brightness(0.7)",
+            : "grayscale(50%) brightness(0.65)",
         }}
       >
-        {/* Dark base */}
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black" />
 
-        {/* Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
           <img
             src={project.icon}
             alt={project.title}
-            className="w-8 h-8 md:w-10 md:h-10 object-contain invert transition-all duration-300"
-            style={{ opacity: isActive ? 0.9 : isHovered ? 0.7 : 0.4 }}
+            className="w-[30%] h-[30%] object-contain invert transition-all duration-300"
+            style={{ opacity: isActive ? 0.9 : isHovered ? 0.7 : 0.35 }}
             loading="eager"
             decoding="async"
           />
         </div>
 
-        {/* Color wash */}
         <div
           className="absolute inset-0 transition-opacity duration-300"
           style={{
-            background: `linear-gradient(to top, ${project.color}CC 0%, ${project.color}55 45%, transparent 75%)`,
+            background: `linear-gradient(to top, ${project.color}CC 0%, ${project.color}44 50%, transparent 80%)`,
             opacity: isActive ? 1 : isHovered ? 0.85 : 0.5,
           }}
         />
 
-        {/* Active top accent */}
         {isActive && (
           <div
-            className="absolute top-0 left-0 right-0 h-[3px]"
+            className="absolute top-0 left-0 right-0 h-[2px]"
             style={{ backgroundColor: project.color }}
           />
         )}
 
-        {/* Label */}
-        <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3">
-          <p className="text-[10px] md:text-[11px] font-bold text-white leading-tight truncate">
+        <div className="absolute bottom-0 left-0 right-0 p-1.5">
+          <p
+            className="font-bold text-white leading-tight truncate"
+            style={{ fontSize: "clamp(8px, 1.1vw, 11px)" }}
+          >
             {project.title}
           </p>
-          <p className="text-[8px] md:text-[9px] text-white/65 mt-0.5 truncate">
+          <p
+            className="text-white/60 mt-0.5 truncate"
+            style={{ fontSize: "clamp(7px, 0.9vw, 9px)" }}
+          >
             {project.subtitle}
           </p>
         </div>
@@ -222,32 +218,24 @@ export default function Projects() {
 
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
 
-  const handleProjectChange = useCallback(
-    (e) => {
-      if (isTransitioning) return;
-      const newIndex = e.detail.index;
-      if (newIndex !== activeIndex) {
-        setIsTransitioning(true);
-        setActiveIndex(newIndex);
-        setTimeout(() => setIsTransitioning(false), 400);
-      }
-    },
-    [activeIndex, isTransitioning]
-  );
+  const handleProjectChange = useCallback((e) => {
+    if (isTransitioning) return;
+    const newIndex = e.detail.index;
+    if (newIndex !== activeIndex) {
+      setIsTransitioning(true);
+      setActiveIndex(newIndex);
+      setTimeout(() => setIsTransitioning(false), 400);
+    }
+  }, [activeIndex, isTransitioning]);
 
-  const handleCardClick = useCallback(
-    (index) => {
-      if (!isTransitioning && index !== activeIndex) {
-        setIsTransitioning(true);
-        setActiveIndex(index);
-        window.dispatchEvent(
-          new CustomEvent("projectIndexChange", { detail: { index } })
-        );
-        setTimeout(() => setIsTransitioning(false), 400);
-      }
-    },
-    [activeIndex, isTransitioning]
-  );
+  const handleCardClick = useCallback((index) => {
+    if (!isTransitioning && index !== activeIndex) {
+      setIsTransitioning(true);
+      setActiveIndex(index);
+      window.dispatchEvent(new CustomEvent("projectIndexChange", { detail: { index } }));
+      setTimeout(() => setIsTransitioning(false), 400);
+    }
+  }, [activeIndex, isTransitioning]);
 
   useEffect(() => {
     window.addEventListener("projectIndexChange", handleProjectChange);
@@ -258,10 +246,9 @@ export default function Projects() {
     <section
       id="projects"
       className="relative w-full h-full bg-black"
-      // No overflow:hidden on the section — background clips itself,
-      // so the lifted active card is never cut at the top
+      // No overflow:hidden — background clips itself so lifted cards are never cut
     >
-      {/* Background — self-contained clip */}
+      {/* ── Background (self-clipped) ── */}
       <div className="absolute inset-0 overflow-hidden">
         {PROJECTS.map((p, i) => (
           <div
@@ -279,62 +266,119 @@ export default function Projects() {
           className="absolute inset-0"
           style={{
             zIndex: 2,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.52) 45%, rgba(0,0,0,0.22) 100%)",
+            background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.2) 100%)",
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             zIndex: 2,
-            background:
-              "linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)",
+            background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)",
           }}
         />
       </div>
 
-      {/* Foreground */}
+      {/* ── Foreground: 3-row layout that never overflows ──
+          Row 1: Title          — shrinks text via clamp, fixed mb
+          Row 2: Info panel     — flex:1 with overflow:hidden, text clamped
+          Row 3: Card strip     — fixed height, always pinned at bottom
+      ── */}
       <div
-        className="relative h-full flex flex-col px-8 md:px-14 lg:px-20 py-10 md:py-14"
-        style={{ zIndex: 3 }}
+        className="relative h-full flex flex-col"
+        style={{
+          zIndex: 3,
+          padding: "clamp(16px, 3.5vw, 56px) clamp(20px, 5vw, 80px)",
+          gap: 0,
+        }}
       >
-        {/* Title */}
-        <h2 className="font-rockSalt text-[38px] md:text-[54px] lg:text-[68px] leading-none text-white tracking-tight drop-shadow-lg mb-6">
+        {/* ── Row 1: Title ── */}
+        <h2
+          className="font-rockSalt leading-none text-white tracking-tight drop-shadow-lg flex-shrink-0"
+          style={{
+            fontSize: "clamp(28px, 5.5vw, 68px)",
+            marginBottom: "clamp(8px, 1.5vh, 24px)",
+          }}
+        >
           Projects
         </h2>
 
-        {/* Info panel */}
-        <div className="flex-1 flex flex-col justify-center max-w-lg">
+        {/* ── Row 2: Info panel — fills remaining space, never pushes cards ── */}
+        <div
+          className="flex-1 flex flex-col justify-center overflow-hidden"
+          style={{ minHeight: 0 }}
+        >
+          {/* Category · Year */}
           <p
-            className="text-[10px] uppercase tracking-[0.4em] mb-3 font-medium transition-colors duration-400"
-            style={{ color: activeProject.color }}
+            className="uppercase font-medium tracking-[0.35em] transition-colors duration-400 flex-shrink-0"
+            style={{
+              fontSize: "clamp(8px, 0.9vw, 11px)",
+              color: activeProject.color,
+              marginBottom: "clamp(4px, 0.8vh, 12px)",
+            }}
           >
             {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
           </p>
 
-          <h3 className="text-[2.4rem] md:text-5xl lg:text-[3.4rem] font-extralight text-white leading-[1.1] mb-2">
+          {/* Project Title */}
+          <h3
+            className="font-extralight text-white leading-tight flex-shrink-0"
+            style={{
+              fontSize: "clamp(22px, 3.8vw, 56px)",
+              marginBottom: "clamp(2px, 0.5vh, 8px)",
+            }}
+          >
             {activeProject.title}
           </h3>
 
-          <p className="text-base text-white/55 mb-4 tracking-wide">
+          {/* Subtitle */}
+          <p
+            className="text-white/55 tracking-wide flex-shrink-0"
+            style={{
+              fontSize: "clamp(11px, 1.2vw, 16px)",
+              marginBottom: "clamp(4px, 0.8vh, 14px)",
+            }}
+          >
             {activeProject.subtitle}
           </p>
 
+          {/* Accent divider */}
           <div
-            className="w-12 h-[2px] mb-4 rounded-full transition-colors duration-500"
-            style={{ backgroundColor: activeProject.color }}
+            className="rounded-full flex-shrink-0 transition-colors duration-500"
+            style={{
+              width: "clamp(32px, 3vw, 48px)",
+              height: "2px",
+              backgroundColor: activeProject.color,
+              marginBottom: "clamp(4px, 0.8vh, 14px)",
+            }}
           />
 
-          <p className="text-sm md:text-[15px] text-white/70 leading-relaxed mb-5">
+          {/* Description — hidden on very small screens if no room */}
+          <p
+            className="text-white/70 leading-relaxed flex-shrink-0"
+            style={{
+              fontSize: "clamp(10px, 1.05vw, 15px)",
+              marginBottom: "clamp(4px, 0.8vh, 16px)",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
             {activeProject.description}
           </p>
 
-          <div className="flex flex-wrap gap-2 mb-6">
+          {/* Tags */}
+          <div
+            className="flex flex-wrap flex-shrink-0"
+            style={{ gap: "clamp(4px, 0.5vw, 8px)", marginBottom: "clamp(6px, 1vh, 20px)" }}
+          >
             {activeProject.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-300"
+                className="font-medium rounded-full transition-all duration-300"
                 style={{
+                  fontSize: "clamp(8px, 0.85vw, 11px)",
+                  padding: "clamp(2px, 0.3vh, 4px) clamp(8px, 0.8vw, 12px)",
                   border: `1px solid ${activeProject.color}55`,
                   color: activeProject.color,
                   backgroundColor: `${activeProject.color}15`,
@@ -345,21 +389,24 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* View Work */}
-          <div style={{ minHeight: "44px" }}>
+          {/* View Work button */}
+          <div className="flex-shrink-0" style={{ minHeight: "clamp(28px, 4vh, 44px)" }}>
             {activeProject.isFigma && (
               <a
                 href={activeProject.figmaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 hover:brightness-110 active:scale-95"
+                className="inline-flex items-center font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:brightness-110 active:scale-95"
                 style={{
+                  fontSize: "clamp(10px, 1vw, 14px)",
+                  gap: "clamp(6px, 0.6vw, 10px)",
+                  padding: "clamp(6px, 0.7vh, 10px) clamp(14px, 1.5vw, 24px)",
                   backgroundColor: activeProject.color,
                   color: "#fff",
-                  boxShadow: `0 4px 30px ${activeProject.color}50`,
+                  boxShadow: `0 4px 24px ${activeProject.color}50`,
                 }}
               >
-                <svg width="13" height="13" viewBox="0 0 38 57" fill="none">
+                <svg width="12" height="12" viewBox="0 0 38 57" fill="none">
                   <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.51 9.51 0 0 1 19 28.5Z" fill="white" />
                   <path d="M9.5 57A9.5 9.5 0 0 0 19 47.5V38H9.5A9.5 9.5 0 0 0 9.5 57Z" fill="white" opacity="0.75" />
                   <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5Z" fill="white" opacity="0.75" />
@@ -367,7 +414,7 @@ export default function Projects() {
                   <path d="M19 0V19H28.5A9.5 9.5 0 0 0 28.5 0Z" fill="white" opacity="0.75" />
                 </svg>
                 View Work
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
                 </svg>
               </a>
@@ -375,31 +422,42 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Card strip
-            paddingTop gives room for the active card's upward lift so it
-            never gets clipped. The strip itself has overflow:visible on Y.
-        */}
-        <div style={{ overflow: "visible" }}>
-          {/* Separator */}
+        {/* ── Row 3: Card strip — always at the bottom, fixed height ──
+            The strip wrapper has a set height via aspect-ratio on cards + padding.
+            paddingTop gives lift room so active card never clips.
+            overflow:visible on Y so the lift animation shows above the strip.
+        ── */}
+        <div
+          className="flex-shrink-0"
+          style={{
+            overflow: "visible",
+            marginTop: "clamp(8px, 1.5vh, 20px)",
+          }}
+        >
+          {/* Separator line */}
           <div
-            className="h-px mb-4 w-full transition-all duration-500"
+            className="transition-all duration-500"
             style={{
-              background: `linear-gradient(to right, ${activeProject.color}70, ${activeProject.color}15, transparent)`,
+              height: "1px",
+              marginBottom: "clamp(6px, 1vh, 16px)",
+              background: `linear-gradient(to right, ${activeProject.color}80, ${activeProject.color}15, transparent)`,
             }}
           />
 
-          {/* paddingTop = lift amount (12px) + a little breathing room */}
           <style>{`#project-strip::-webkit-scrollbar { display: none; }`}</style>
           <div
             id="project-strip"
-            className="flex gap-2 md:gap-3 items-end w-full"
             style={{
+              display: "flex",
+              gap: "clamp(4px, 0.6vw, 12px)",
+              alignItems: "flex-end",
               overflowX: "auto",
               overflowY: "visible",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              paddingTop: "20px",   // room above for lifted card
-              paddingBottom: "4px",
+              // paddingTop gives the active card lift room — won't clip
+              paddingTop: "14px",
+              paddingBottom: "clamp(4px, 1vh, 12px)",
             }}
           >
             {PROJECTS.map((project, index) => (

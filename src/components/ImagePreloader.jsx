@@ -16,6 +16,8 @@ import project4 from '../assets/project4.webp';
 import project5 from '../assets/project5.webp';
 import project6 from '../assets/project6.webp';
 import project7 from '../assets/project7.webp';
+import project8 from '../assets/project8.webp';
+
 
 const ImagePreloaderMinimal = ({ onLoadComplete }) => {
   const [progress, setProgress] = useState(0);
@@ -25,7 +27,7 @@ const ImagePreloaderMinimal = ({ onLoadComplete }) => {
   useEffect(() => {
     const images = [
       androidIcon, figmaIcon, desktopIcon, hashtagIcon, logo, grid, illustrater,
-      project1, project2, project3, project4, project5, project6, project7,
+      project1, project2, project3, project4, project5, project6, project7, project8,
     ];
 
     let loadedCount = 0;
