@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
-// Import all images
 import androidIcon from '../assets/android.png';
 import figmaIcon from '../assets/figma.png';
 import desktopIcon from '../assets/java.png';
@@ -18,165 +17,290 @@ import project6 from '../assets/project6.webp';
 import project7 from '../assets/project7.webp';
 import project8 from '../assets/project8.webp';
 
-
-const ImagePreloaderMinimal = ({ onLoadComplete }) => {
+const ImagePreloader = ({ onLoadComplete }) => {
   const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [fadeOut, setFadeOut] = useState(false);
+  const [display, setDisplay] = useState(true);
+  const [exit, setExit] = useState(false);
 
+  const countRef = useRef(0);
+  const targetRef = useRef(0);
+  const rafRef = useRef(null);
+
+  const numTextRef = useRef(null);
+  const numBgRef = useRef(null);
+  const displayRef = useRef(true);
+
+  // Counter tick
+  useEffect(() => {
+    const tick = () => {
+      if (!displayRef.current) return;
+
+      const diff = targetRef.current - countRef.current;
+      countRef.current += Math.max(diff * 0.08, diff > 0 ? 0.5 : 0);
+
+      if (countRef.current > 100) countRef.current = 100;
+
+      const currentVal = Math.floor(countRef.current);
+      if (numTextRef.current) numTextRef.current.textContent = currentVal;
+      if (numBgRef.current) numBgRef.current.textContent = currentVal;
+
+      if (countRef.current >= 100 && targetRef.current >= 100) {
+        // Start staggered exit
+        setTimeout(() => {
+          setExit(true);
+          setTimeout(() => {
+            setDisplay(false);
+            displayRef.current = false;
+            onLoadComplete();
+          }, 1200); // Wait for the slide-up animation to finish
+        }, 600);
+        return;
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [onLoadComplete]);
+
+  // Image loader
   useEffect(() => {
     const images = [
       androidIcon, figmaIcon, desktopIcon, hashtagIcon, logo, grid, illustrater,
       project1, project2, project3, project4, project5, project6, project7, project8,
     ];
+    let loaded = 0;
+    const total = images.length;
 
-    let loadedCount = 0;
-    const totalImages = images.length;
-
-    const loadImage = (src) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          loadedCount++;
-          setProgress((loadedCount / totalImages) * 100);
-          resolve();
-        };
-        img.onerror = () => {
-          loadedCount++;
-          setProgress((loadedCount / totalImages) * 100);
-          resolve();
-        };
-        img.src = src;
-      });
-    };
-
-    Promise.all(images.map(loadImage)).then(() => {
-      setTimeout(() => {
-        setFadeOut(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          onLoadComplete();
-        }, 600);
-      }, 200);
+    images.forEach((src) => {
+      const img = new Image();
+      const done = () => {
+        loaded++;
+        targetRef.current = (loaded / total) * 100;
+        setProgress((loaded / total) * 100);
+      };
+      img.onload = done;
+      img.onerror = done;
+      img.src = src;
     });
-  }, [onLoadComplete]);
+  }, []);
 
-  if (!isLoading) return null;
+  if (!display) return null;
 
   return (
-    <div 
-      className={`fixed inset-0 bg-white flex flex-col items-center justify-center z-50 transition-all duration-600 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "#080808", // Deep rich dark
+        zIndex: 999999,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        color: "#fff",
+        // Exit animation slides everything up smoothly with a curve
+        transform: exit ? "translateY(-100vh)" : "translateY(0)",
+        transition: exit ? "transform 1.2s cubic-bezier(0.76, 0, 0.24, 1)" : "none",
+        borderBottomLeftRadius: exit ? "10%" : "0%",
+        borderBottomRightRadius: exit ? "10%" : "0%",
+      }}
     >
-      {/* Animated background pattern */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Grid background */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)',
-            backgroundSize: '80px 80px'
-          }}
-        />
-        
-        {/* Animated gradient orbs */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-[#8d6e63]/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-tl from-[#a1887f]/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+    
+      {/* Huge Background Number Watermark */}
+      <div style={{
+        position: "absolute",
+        bottom: "-5vh",
+        right: "-2vw",
+        fontFamily: "'Bebas Neue', Impact, sans-serif",
+        fontSize: "min(50vw, 80vh)",
+        lineHeight: 0.8,
+        color: "rgba(255,255,255,0.06)",
+        pointerEvents: "none",
+        userSelect: "none",
+        zIndex: 0,
+        opacity: exit ? 0 : 1,
+        transition: "opacity 0.6s ease",
+      }}>
+        <span ref={numBgRef}>0</span>
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center">
-        
-        {/* Animated logo container */}
-        <div className="relative mb-16">
-          {/* Outer rotating circle */}
-          <div className="absolute inset-0 -m-10">
-            <svg className="w-44 h-44 animate-spin" style={{ animationDuration: '8s' }} viewBox="0 0 100 100">
-              <circle 
-                cx="50" 
-                cy="50" 
-                r="45" 
-                fill="none" 
-                stroke="url(#gradient)" 
-                strokeWidth="0.5"
-                strokeDasharray="10 5"
-                opacity="0.3"
-              />
-              <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#a1887f" />
-                  <stop offset="100%" stopColor="#6d4c41" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+      {/* Background Animated Gradient / Glows */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "80vw",
+          height: "80vw",
+          maxWidth: "800px",
+          maxHeight: "800px",
+          background: "radial-gradient(circle, rgba(141,110,99,0.12) 0%, rgba(0,0,0,0) 60%)",
+          filter: "blur(60px)",
+          animation: "pulseGlow 4s ease-in-out infinite alternate",
+          opacity: exit ? 0 : 1,
+          transition: "opacity 0.5s ease",
+          zIndex: 0,
+        }}
+      />
 
-          {/* Center logo */}
-          <div className="relative w-24 h-24 flex items-center justify-center">
-            {/* Logo background circle with pulse */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#3e2723] to-[#6d4c41] rounded-full" />
-            <div className="absolute inset-0 bg-gradient-to-br from-[#3e2723]/50 to-transparent rounded-full animate-pulse" />
-            
-            {/* Logo icon */}
-            <div className="relative z-10">
-              <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 010 2H6v2a1 1 0 01-2 0V5zM20 5a1 1 0 00-1-1h-4a1 1 0 100 2h2v2a1 1 0 102 0V5zM4 19a1 1 0 001 1h4a1 1 0 100-2H6v-2a1 1 0 10-2 0v3zM20 19a1 1 0 01-1 1h-4a1 1 0 110-2h2v-2a1 1 0 112 0v3z" />
-              </svg>
-            </div>
+      {/* Grid Pattern */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+          opacity: exit ? 0 : 0.6,
+          transition: "opacity 0.5s ease",
+          zIndex: 0,
+        }}
+      />
+
+      {/* Brand & Loading Info */}
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "2.5rem",
+          opacity: exit ? 0 : 1,
+          transform: exit ? "translateY(-40px)" : "translateY(0)",
+          transition: "all 0.6s cubic-bezier(0.76, 0, 0.24, 1)",
+          width: "100%",
+          zIndex: 10,
+        }}
+      >
+        {/* Animated Rings */}
+        <div style={{ position: "relative", width: "100px", height: "100px" }}>
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: "50%",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }} />
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: "50%",
+            border: "2px solid transparent",
+            borderTopColor: "#fff",
+            borderRightColor: "#fff",
+            animation: "spin 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite",
+          }} />
+          <div style={{
+            position: "absolute", inset: 10, borderRadius: "50%",
+            border: "1px solid transparent",
+            borderBottomColor: "rgba(255,255,255,0.5)",
+            borderLeftColor: "rgba(255,255,255,0.5)",
+            animation: "spin 3s linear infinite reverse",
+          }} />
+          {/* Inner logo/text */}
+          <div style={{
+            position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "2rem", letterSpacing: "2px",
+            color: "#fff"
+          }}>
+            RN
           </div>
         </div>
 
-        {/* Name and title */}
-        <div className="text-center mb-12">
-          <h1 className="font-protest text-4xl md:text-5xl text-[#3e2723] mb-2 tracking-tight">
-            Raveesha
+        {/* Text */}
+        <div style={{ textAlign: "center" }}>
+          <h1 style={{
+            fontSize: "clamp(1rem, 3vw, 1.5rem)",
+            fontWeight: "500",
+            letterSpacing: "0.4em",
+            textTransform: "uppercase",
+            margin: "0 0 0.75rem 0",
+            fontFamily: "Inter, system-ui, sans-serif",
+            background: "linear-gradient(to right, #fff, rgba(255,255,255,0.6))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>
+            Raveesha Nethmina
           </h1>
-          <p className="font-rockSalt text-sm text-black/40 tracking-wide">
-            Crafting Experiences
+          <p style={{
+            fontSize: "0.75rem",
+            color: "rgba(255,255,255,0.3)",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            fontFamily: "Inter, system-ui, sans-serif",
+          }}>
+            Creative Designer
           </p>
         </div>
+      </div>
 
-        {/* Progress bar container */}
-        <div className="w-72 md:w-96">
-          {/* Progress bar */}
-          <div className="relative h-1 bg-black/5 rounded-full overflow-hidden mb-3">
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent animate-shimmer" />
-            
-            {/* Progress fill */}
-            <div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#8d6e63] to-[#6d4c41] transition-all duration-300 ease-out rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      {/* Modern Progress Bar */}
+      <div style={{
+        position: "absolute",
+        bottom: "12%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "70%",
+        maxWidth: "400px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        opacity: exit ? 0 : 1,
+        transition: "opacity 0.4s ease 0.1s",
+        zIndex: 10,
+      }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontSize: "0.7rem",
+          color: "rgba(255,255,255,0.5)",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase"
+        }}>
+          <span>Initializing Experience</span>
+          <span style={{ fontWeight: 600, color: "#fff" }}><span ref={numTextRef}>0</span>%</span>
+        </div>
 
-          {/* Progress text */}
-          <div className="flex items-center justify-center gap-3">
-            {/* Animated dots */}
-            <div className="flex gap-1">
-              <div className="w-1 h-1 bg-[#8d6e63] rounded-full animate-bounce" style={{ animationDuration: '1s', animationDelay: '0s' }} />
-              <div className="w-1 h-1 bg-[#8d6e63] rounded-full animate-bounce" style={{ animationDuration: '1s', animationDelay: '0.15s' }} />
-              <div className="w-1 h-1 bg-[#8d6e63] rounded-full animate-bounce" style={{ animationDuration: '1s', animationDelay: '0.3s' }} />
-            </div>
-            
-            <p className="text-black/30 text-xs tracking-wider uppercase font-medium">
-              {progress < 40 ? 'Loading' : progress < 80 ? 'Processing' : 'Ready'}
-            </p>
-            
-            <span className="text-black/50 text-xs font-semibold tabular-nums">
-              {Math.round(progress)}%
-            </span>
+        {/* Track */}
+        <div style={{
+          width: "100%",
+          height: "1px",
+          background: "rgba(255,255,255,0.1)",
+          position: "relative",
+          overflow: "visible",
+        }}>
+          {/* Fill */}
+          <div style={{
+            position: "absolute",
+            top: -1, left: 0, bottom: -1,
+            width: `${progress}%`,
+            background: "linear-gradient(90deg, rgba(255,255,255,0.2) 0%, #fff 100%)",
+            transition: "width 0.4s ease-out",
+            boxShadow: "0 0 15px rgba(255,255,255,0.4)",
+          }}>
+            {/* Glow Head */}
+            <div style={{
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "4px",
+              height: "4px",
+              background: "#fff",
+              borderRadius: "50%",
+              boxShadow: "0 0 10px 2px #fff",
+            }} />
           </div>
         </div>
       </div>
 
-      {/* Bottom text */}
-      <div className="absolute bottom-12 left-0 right-0 flex justify-center">
-        <p className="text-black/20 text-xs tracking-[0.3em] uppercase">
-          Portfolio Loading
-        </p>
-      </div>
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default ImagePreloaderMinimal;
+export default ImagePreloader;

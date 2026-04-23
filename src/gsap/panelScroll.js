@@ -15,8 +15,8 @@ export function setupPanelScroll() {
   }
   ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-  gsap.set(panels.slice(1), { yPercent: 100 });
-  gsap.set(panels[0], { yPercent: 0 });
+  gsap.set(panels.slice(1), { yPercent: 100, opacity: 1 });
+  gsap.set(panels[0], { yPercent: 0, opacity: 1 });
 
   const tl = gsap.timeline({
     defaults: { ease: "none" },

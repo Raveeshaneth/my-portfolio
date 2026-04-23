@@ -279,6 +279,9 @@ export default function Projects() {
           flexDirection: "column",
           minHeight: 0,
           overflow: "visible",   // ← button must not clip
+          opacity: isTransitioning ? 0 : 1,
+          transform: isTransitioning ? "translateY(15px)" : "translateY(0)",
+          transition: "opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
         }}>
 
           {/* Meta pill: category · year */}

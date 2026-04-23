@@ -1,18 +1,19 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 
 import androidIcon from "../assets/android.png";
 import figmaIcon from "../assets/figma.png";
 import desktopIcon from "../assets/java.png";
 import hashtagIcon from "../assets/hashtag.png";
 
-import project1 from "../assets/project1.webp";
-import project2 from "../assets/project2.webp";
-import project3 from "../assets/project3.webp";
-import project4 from "../assets/project4.webp";
-import project5 from "../assets/project5.webp";
-import project6 from "../assets/project6.webp";
-import project7 from "../assets/project7.webp";
-import project8 from "../assets/project8.webp";
+/* ── Resolve image URLs without eager-loading the binary data ── */
+const project1 = new URL("../assets/project1.webp", import.meta.url).href;
+const project2 = new URL("../assets/project2.webp", import.meta.url).href;
+const project3 = new URL("../assets/project3.webp", import.meta.url).href;
+const project4 = new URL("../assets/project4.webp", import.meta.url).href;
+const project5 = new URL("../assets/project5.webp", import.meta.url).href;
+const project6 = new URL("../assets/project6.webp", import.meta.url).href;
+const project7 = new URL("../assets/project7.webp", import.meta.url).href;
+const project8 = new URL("../assets/project8.webp", import.meta.url).href;
 
 const PROJECTS = [
   {
@@ -90,7 +91,7 @@ const PROJECTS = [
 ];
 
 /* ─── Thumbnail grid card ─── */
-const ProjectCard = React.memo(({ project, isActive, onClick }) => (
+const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
   <div
     onClick={onClick}
     style={{
@@ -99,28 +100,36 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
       overflow: "hidden",
       position: "relative",
       aspectRatio: "3/4",
-      outline: isActive ? `1.5px solid ${project.color}` : "1.5px solid transparent",
-      transition: "outline-color 0.3s ease",
+      outline: isActive ? `2px solid ${project.color}` : "2px solid transparent",
+      outlineOffset: 2,
+      transition: "outline-color 0s, transform 0s",
+      transform: isActive ? "scale(1.06)" : "scale(1)",
       flexShrink: 0,
+      WebkitTapHighlightColor: "transparent",
+      background: "linear-gradient(135deg,#1a1a1a,#000)",
     }}
   >
-    {/* Background */}
-    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a1a,#000)" }} />
-
-    {/* Project image */}
-    <div style={{
-      position: "absolute", inset: 0,
-      backgroundImage: `url(${project.image})`,
-      backgroundSize: "cover", backgroundPosition: "center",
-      opacity: isActive ? 0.7 : 0.35,
-      transition: "opacity 0.3s ease",
-    }} />
+    {/* Project image – real <img> so loading=lazy is respected by the browser */}
+    <img
+      src={project.image}
+      alt=""
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      fetchpriority={eager ? "high" : "low"}
+      style={{
+        position: "absolute", inset: 0,
+        width: "100%", height: "100%",
+        objectFit: "cover",
+        opacity: isActive ? 0.75 : 0.35,
+        transition: "opacity 0s",
+      }}
+    />
 
     {/* Icon */}
     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img
         src={project.icon} alt=""
-        style={{ width: "30%", height: "30%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.9 : 0.4, transition: "opacity 0.3s" }}
+        style={{ width: "30%", height: "30%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.95 : 0.4, transition: "opacity 0s" }}
         loading="lazy" decoding="async"
       />
     </div>
@@ -129,22 +138,19 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
     <div style={{
       position: "absolute", inset: 0,
       background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)`,
-      opacity: isActive ? 1 : 0.55,
-      transition: "opacity 0.3s",
+      opacity: isActive ? 1 : 0.45,
+      transition: "opacity 0s",
     }} />
 
     {/* Active top line */}
     {isActive && (
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: project.color }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2.5, background: project.color }} />
     )}
 
     {/* Label */}
     <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "8px 8px 7px" }}>
       <p style={{ fontSize: 10, fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {project.title}
-      </p>
-      <p style={{ fontSize: 8, color: "rgba(255,255,255,0.55)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        {project.subtitle}
       </p>
     </div>
   </div>
@@ -289,9 +295,9 @@ const ProjectModal = React.memo(({ project, onClose }) => {
                     letterSpacing: "0.03em",
                     whiteSpace: "nowrap",
                     boxShadow: "none",
-                    transform: btnHovered ? "scale(1.07)" : "scale(1)",
+                    transform: btnHovered ? "scale(1.06)" : "scale(1)",
                     transformOrigin: "center center",
-                    transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1)",
+                    transition: "transform 0s",
                     willChange: "transform",
                   }}
                 >
@@ -316,16 +322,40 @@ ProjectModal.displayName = "ProjectModal";
 export default function ProjectsMobile() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
+  /* track which bg images have ever been needed – keeps them cached once loaded */
+  const [loadedSet, setLoadedSet] = useState(() => new Set([0]));
+  const sectionRef = useRef(null);
+
+  /* Defer ALL image network requests until section is near the viewport */
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
+      { rootMargin: "200px" }   // start loading 200 px before section enters screen
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
   const c = activeProject.color;
 
   const handleCardClick = useCallback((index) => {
     if (index === activeIndex) {
-      // Tap active card → open modal
       setSelectedProject(PROJECTS[index]);
     } else {
       setActiveIndex(index);
+      /* pre-load neighbours so they're ready before the user taps again */
+      setLoadedSet(prev => {
+        const next = new Set(prev);
+        [index - 1, index, index + 1].forEach(i => {
+          if (i >= 0 && i < PROJECTS.length) next.add(i);
+        });
+        return next;
+      });
     }
   }, [activeIndex]);
 
@@ -340,6 +370,7 @@ export default function ProjectsMobile() {
 
       <section
         id="projects"
+        ref={sectionRef}
         style={{
           position: "relative",
           width: "100%",
@@ -350,18 +381,21 @@ export default function ProjectsMobile() {
           overflow: "hidden",
         }}
       >
-        {/* ── Background images ── */}
+        {/* ── Background images – only mount images that have been needed ── */}
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          {PROJECTS.map((p, i) => (
-            <div key={p.id} style={{
-              position: "absolute", inset: 0,
-              backgroundImage: `url(${p.image})`,
-              backgroundSize: "cover", backgroundPosition: "center",
-              opacity: i === activeIndex ? 1 : 0,
-              transition: "opacity 0.6s ease",
-              zIndex: i === activeIndex ? 1 : 0,
-            }} />
-          ))}
+          {inView && PROJECTS.map((p, i) => {
+            if (!loadedSet.has(i)) return null;   // not yet needed – skip entirely
+            return (
+              <div key={p.id} style={{
+                position: "absolute", inset: 0,
+                backgroundImage: `url(${p.image})`,
+                backgroundSize: "cover", backgroundPosition: "center",
+                opacity: i === activeIndex ? 1 : 0,
+                transition: "opacity 0s",
+                zIndex: i === activeIndex ? 1 : 0,
+              }} />
+            );
+          })}
           {/* Vignettes — heavier on mobile for readability */}
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.85) 80%, rgba(0,0,0,0.99) 100%)" }} />
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 70%)" }} />
@@ -369,7 +403,7 @@ export default function ProjectsMobile() {
           <div style={{
             position: "absolute", inset: 0, zIndex: 3,
             background: `radial-gradient(ellipse at 20% 70%, ${c}20 0%, transparent 60%)`,
-            transition: "background 0.6s ease",
+            transition: "background 0s",
           }} />
         </div>
 
@@ -399,10 +433,10 @@ export default function ProjectsMobile() {
 
             {/* Meta */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10, flexShrink: 0 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.4s", flexShrink: 0 }} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0s", flexShrink: 0 }} />
               <p style={{
                 fontSize: 10, fontWeight: 600, letterSpacing: "0.28em",
-                textTransform: "uppercase", color: c, margin: 0, transition: "color 0.4s",
+                textTransform: "uppercase", color: c, margin: 0, transition: "color 0s",
               }}>
                 {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
               </p>
@@ -429,7 +463,7 @@ export default function ProjectsMobile() {
             {/* Accent line */}
             <div style={{
               width: 40, height: 2, borderRadius: 2,
-              background: c, transition: "background 0.5s",
+              background: c, transition: "background 0s",
               marginBottom: 14, flexShrink: 0,
             }} />
 
@@ -451,7 +485,7 @@ export default function ProjectsMobile() {
                   padding: "4px 11px", borderRadius: 100,
                   border: `1px solid ${c}40`, color: c, background: `${c}12`,
                   whiteSpace: "nowrap", letterSpacing: "0.03em",
-                  transition: "border-color 0.4s, color 0.4s, background 0.4s",
+                  transition: "border-color 0s, color 0s, background 0s",
                 }}>
                   {tag}
                 </span>
@@ -464,16 +498,17 @@ export default function ProjectsMobile() {
             {/* "Tap to view" hint — shows when active project has figma link */}
             {activeProject.isFigma && (
               <div style={{ flexShrink: 0, marginBottom: 6, overflow: "visible" }}>
-                <button
-                  onClick={() => setSelectedProject(activeProject)}
+                <a
+                  href={activeProject.figmaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
                     padding: "11px 22px", borderRadius: 100,
                     background: c, color: "#fff",
                     fontSize: 13, fontWeight: 600,
-                    border: "none", cursor: "pointer",
+                    textDecoration: "none",
                     letterSpacing: "0.03em", whiteSpace: "nowrap",
-                    // Active press feel on touch
                     WebkitTapHighlightColor: "transparent",
                   }}
                 >
@@ -482,7 +517,7 @@ export default function ProjectsMobile() {
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M7 17L17 7M17 7H7M17 7V17" />
                   </svg>
-                </button>
+                </a>
               </div>
             )}
 
@@ -501,8 +536,8 @@ export default function ProjectsMobile() {
             {/* Separator */}
             <div style={{
               height: 1,
-              background: `linear-gradient(to right, ${c}70, ${c}18 60%, transparent)`,
-              transition: "background 0.5s",
+              background: `linear-gradient(to right, transparent, ${c}70 20%, ${c}18 80%, transparent)`,
+              transition: "background 0s",
               marginBottom: 12,
             }} />
 
@@ -512,7 +547,10 @@ export default function ProjectsMobile() {
               gap: 8,
               overflowX: "auto", overflowY: "visible",
               paddingBottom: "clamp(20px,4vh,36px)",
-              paddingTop: 6,
+              paddingTop: 8,
+              /* Side padding so first/last card outlines aren't clipped */
+              paddingLeft: 6,
+              paddingRight: 6,
             }}>
               {PROJECTS.map((project, index) => (
                 <div key={project.id} style={{ width: "clamp(64px,18vw,88px)", flexShrink: 0 }}>
@@ -520,6 +558,7 @@ export default function ProjectsMobile() {
                     project={project}
                     isActive={index === activeIndex}
                     onClick={() => handleCardClick(index)}
+                    eager={index === 0}
                   />
                 </div>
               ))}

@@ -6,7 +6,7 @@ export default function Navbar() {
 
   const scrollToSection = useCallback((sectionId) => {
     const viewportHeight = window.innerHeight;
-    
+
     let scrollTarget = 0;
     if (sectionId === 'about') {
       scrollTarget = viewportHeight;
@@ -18,7 +18,7 @@ export default function Navbar() {
         scrollTarget = footerElement.offsetTop;
       }
     }
-    
+
     window.scrollTo({
       top: scrollTarget,
       behavior: 'smooth'
@@ -43,7 +43,7 @@ export default function Navbar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -73,15 +73,15 @@ export default function Navbar() {
       `}
     >
       {/* Left: Logo */}
-      <button 
+      <button
         onClick={handleLogoClick}
         className="cursor-pointer will-change-transform"
         aria-label="Back to top"
       >
-        <img 
-          src={logo} 
-          alt="logo" 
-          className="w-10 h-10 object-contain" 
+        <img
+          src={logo}
+          alt="logo"
+          className="w-10 h-10 object-contain"
           loading="eager"
           decoding="async"
         />
@@ -89,19 +89,19 @@ export default function Navbar() {
 
       {/* Right: menu links */}
       <div className="flex gap-6 md:gap-8">
-        <button 
+        <button
           onClick={() => scrollToSection('about')}
           className={linkClass}
         >
           About
         </button>
-        <button 
+        <button
           onClick={() => scrollToSection('projects')}
           className={linkClass}
         >
           Projects
         </button>
-        <button 
+        <button
           onClick={() => scrollToSection('contact')}
           className={linkClass}
         >

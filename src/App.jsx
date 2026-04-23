@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { setupPanelScroll } from "./gsap/panelScroll";
 import ImagePreloader from "./components/ImagePreloader";
 
@@ -8,36 +8,38 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import ProjectsMobile from "./components/ProjectsMobile";
 import Footer from "./components/Footer";
+import CustomCursor from "./components/CustomCursor";
 
 export default function App() {
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingDone, setLoadingDone] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Setup GSAP only after loader is fully gone
   useEffect(() => {
-    if (imagesLoaded && !isMobile) {
+    if (loadingDone && !isMobile) {
       setupPanelScroll();
     }
-  }, [imagesLoaded, isMobile]);
-
-  if (!imagesLoaded) {
-    return <ImagePreloader onLoadComplete={() => setImagesLoaded(true)} />;
-  }
+  }, [loadingDone, isMobile]);
 
   return (
     <div className="bg-white">
+      {/* ── Loading overlay — always mounts on top so the app renders beneath ── */}
+      {!loadingDone && (
+        <ImagePreloader onLoadComplete={() => setLoadingDone(true)} />
+      )}
+
+      {/* ── App content — always in the DOM so it's ready when loader exits ── */}
+      {/* Custom cursor — desktop only */}
+      {!isMobile && <CustomCursor />}
       <Navbar />
 
       {isMobile ? (
-        // Mobile: Normal scroll layout
         <>
           <Hero />
           <About />
@@ -45,7 +47,6 @@ export default function App() {
           <Footer />
         </>
       ) : (
-        // Desktop: Panel scroll layout
         <>
           <main>
             <section className="panel" id="hero">

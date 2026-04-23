@@ -30,12 +30,12 @@ export default function About() {
       </div>
 
       {/* Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/20 via-transparent to-purple-950/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#3e2723]/30 via-transparent to-[#8d6e63]/20" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
       {/* Accent glows */}
-      <div className="absolute top-24 right-24 w-36 h-36 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-32 left-32 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-24 right-24 w-48 h-48 bg-[#a1887f]/15 rounded-full blur-3xl animate-pulseGlow" />
+      <div className="absolute bottom-32 left-32 w-56 h-56 bg-[#6d4c41]/15 rounded-full blur-3xl animate-pulse" />
 
       {/* Content */}
       <div className="relative w-full max-w-[1400px] px-6 md:px-12 lg:px-20 py-16">
@@ -91,10 +91,10 @@ export default function About() {
                 {skills.map((skill, index) => (
                   <span
                     key={skill.name}
-                    className="px-5 py-2.5 text-sm text-white/70 border border-white/20 rounded-full backdrop-blur-sm hover:border-white/50 hover:text-white transition-all duration-300"
+                    className="px-5 py-2.5 text-sm text-white/70 border border-white/10 bg-white/5 rounded-full backdrop-blur-sm hover:border-[#8d6e63]/50 hover:bg-[#8d6e63]/10 hover:text-white transition-all duration-300 hover:scale-105 cursor-default hover:shadow-[0_0_20px_rgba(141,110,99,0.3)]"
                     style={{ transitionDelay: `${index * 100}ms` }}
                   >
-                    <span className="mr-2">{skill.icon}</span>
+                    <span className="mr-2 inline-block transition-transform duration-300 hover:rotate-12">{skill.icon}</span>
                     {skill.name}
                   </span>
                 ))}

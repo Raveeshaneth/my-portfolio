@@ -9,6 +9,29 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Clean scrollbar (removes top/bottom arrows) */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border: 4px solid #f1f1f1;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
 @layer base {
   body {
     margin: 0;
@@ -78,6 +101,10 @@ section.panel {
   width: 100%;
   height: 100vh;
   display: flex;
+}
+
+section.panel:not(:first-child) {
+  opacity: 0;
 }
 
 /* ===================== */
