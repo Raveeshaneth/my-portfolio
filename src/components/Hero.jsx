@@ -1,4 +1,4 @@
-import grid from "../assets/grid.png";
+import grid from "../assets/grid1.jpg";
 import illustrater from "../assets/illustrater.webp";
 
 export default function Hero() {
@@ -9,11 +9,11 @@ export default function Hero() {
         w-full
         h-full
         overflow-hidden
-        bg-[#fafafa]
+        bg-white
       "
     >
       {/* background grid */}
-      <div className="absolute inset-0 opacity-[0.08]">
+      <div className="absolute inset-0 opacity-[0.05]">
         <img
           src={grid}
           alt="grid background"

@@ -16,194 +16,119 @@ import project8 from "../assets/project8.webp";
 
 const PROJECTS = [
   {
-    id: 0,
-    icon: figmaIcon,
-    image: project8,
-    title: "event.io",
-    subtitle: "Event Dashboard",
-    category: "Web Application",
-    year: "2026",
+    id: 0, icon: figmaIcon, image: project8,
+    title: "event.io", subtitle: "Event Dashboard",
+    category: "Web Application", year: "2026",
     tags: ["UI/UX", "Dashboard", "SaaS", "Figma"],
-    description:
-      "A modern event management dashboard that helps planners track event performance, manage bookings, and analyze attendee insights through a clean, data-driven interface.",
-    color: "#7C5CFF",
-    figmaUrl: "https://www.figma.com/placeholder/event-io",
-    isFigma: true,
-  },
-  {
-    id: 1,
-    icon: figmaIcon,
-    image: project7,
-    title: "AccessHive",
-    subtitle: "Mixed Reality",
-    category: "Accessibility System",
-    year: "2024",
-    tags: ["AI", "Accessibility", "XR"],
-    description:
-      "2050 mixed-reality accessibility system helping blind and low-vision users navigate safely with AI scene understanding, spatial audio, haptic feedback, and real-time volunteer assistance.",
-    color: "#63a2a9",
-    figmaUrl: "https://www.figma.com/placeholder/accesshive",
-    isFigma: true,
-  },
-  {
-    id: 2,
-    icon: figmaIcon,
-    image: project3,
-    title: "UrbanFood",
-    subtitle: "E-Commerce",
-    category: "Web Application",
-    year: "2023",
-    tags: ["E-commerce", "UX"],
-    description:
-      "Fresh food delivery platform with intuitive product browsing and seamless checkout experience.",
-    color: "#2bac48",
-    figmaUrl: "https://www.figma.com/placeholder/urbanfood",
-    isFigma: true,
-  },
-  {
-    id: 3,
-    icon: figmaIcon,
-    image: project2,
-    title: "Mentora AI",
-    subtitle: "Web Platform",
-    category: "Web Application",
-    year: "2024",
-    tags: ["Web", "AI/ML"],
-    description:
-      "AI-powered educational platform with personalized learning paths and intelligent progress tracking.",
+    description: "A modern event management dashboard that helps planners track event performance, manage bookings, and analyze attendee insights through a clean, data-driven interface.",
     color: "#a855f7",
-    figmaUrl: "https://www.figma.com/placeholder/mentora-ai",
+    figmaUrl: "https://www.figma.com/design/ctTsCVgQbqGvu5Pfnme6p1/Raveesha-Nethmina-Ui-Ux-Intern-Zyner.io?node-id=5-141&t=ntL4yVRAFFlkr2GU-1",
     isFigma: true,
   },
   {
-    id: 4,
-    icon: androidIcon,
-    image: project1,
-    title: "Tuition Management",
-    subtitle: "Mobile App",
-    category: "Mobile Application",
-    year: "2024",
+    id: 1, icon: figmaIcon, image: project7,
+    title: "AccessHive", subtitle: "Mixed Reality",
+    category: "Accessibility System", year: "2024",
+    tags: ["AI", "Accessibility", "XR"],
+    description: "2050 mixed-reality accessibility system helping blind and low-vision users navigate safely with AI scene understanding, spatial audio, haptic feedback, and real-time volunteer assistance.",
+    color: "#63a2a9",
+    figmaUrl: "https://www.figma.com/design/FK0NPX5KJvSb0hhA1fnD5Y/AccessHive?node-id=15-190&t=kQXKX5k8swgSsaNR-1",
+    isFigma: true,
+  },
+  {
+    id: 2, icon: figmaIcon, image: project3,
+    title: "UrbanFood", subtitle: "E-Commerce",
+    category: "Web Application", year: "2023",
+    tags: ["E-commerce", "UX"],
+    description: "Fresh food delivery platform with intuitive product browsing and seamless checkout experience.",
+    color: "#2bac48",
+    figmaUrl: "https://www.figma.com/design/j9d9i0F2v1jCXFXCBSNtst/Urbanfood?node-id=0-1&t=iAmMHaOCF0s68CR3-1",
+    isFigma: true,
+  },
+  {
+    id: 3, icon: figmaIcon, image: project2,
+    title: "Mentora AI", subtitle: "Web Platform",
+    category: "Web Application", year: "2024",
+    tags: ["Web", "AI/ML"],
+    description: "AI-powered educational platform with personalized learning paths and intelligent progress tracking.",
+    color: "#7C5CFF",
+    figmaUrl: "https://www.figma.com/design/qJvXV3kTY2R0ygHxwb99Rg/Mentora?node-id=0-1&t=ZsSpWgUcLbbwPCXO-1",
+    isFigma: true,
+  },
+  {
+    id: 4, icon: androidIcon, image: project1,
+    title: "Tuition Mgmt", subtitle: "Mobile App",
+    category: "Mobile Application", year: "2024",
     tags: ["Android", "UI/UX"],
-    description:
-      "Complete mobile solution for managing tuition classes with attendance tracking and payment processing.",
-    color: "#8670f7",
-    isFigma: false,
+    description: "Complete mobile solution for managing tuition classes with attendance tracking and payment processing.",
+    color: "#8670f7", isFigma: false,
   },
   {
-    id: 5,
-    icon: hashtagIcon,
-    image: project4,
-    title: "Hospital System",
-    subtitle: "Healthcare",
-    category: "Desktop Application",
-    year: "2023",
+    id: 5, icon: hashtagIcon, image: project4,
+    title: "Hospital System", subtitle: "Healthcare",
+    category: "Desktop Application", year: "2023",
     tags: ["Healthcare", "Desktop"],
-    description:
-      "Comprehensive hospital management system for patient records, appointments, and medical workflows.",
-    color: "#00BCD4",
-    isFigma: false,
+    description: "Comprehensive hospital management system for patient records, appointments, and medical workflows.",
+    color: "#00BCD4", isFigma: false,
   },
   {
-    id: 6,
-    icon: desktopIcon,
-    image: project5,
-    title: "Medicare",
-    subtitle: "Appointment",
-    category: "Desktop Application",
-    year: "2023",
+    id: 6, icon: desktopIcon, image: project5,
+    title: "Medicare", subtitle: "Appointment",
+    category: "Desktop Application", year: "2023",
     tags: ["Healthcare", "System"],
-    description:
-      "Streamlined appointment scheduling system with automated reminders and calendar management.",
-    color: "#e46e00",
-    isFigma: false,
+    description: "Streamlined appointment scheduling system with automated reminders and calendar management.",
+    color: "#e46e00", isFigma: false,
   },
   {
-    id: 7,
-    icon: hashtagIcon,
-    image: project6,
-    title: "Distribution Management",
-    subtitle: "Management",
-    category: "Desktop Application",
-    year: "2022",
+    id: 7, icon: hashtagIcon, image: project6,
+    title: "Distribution Mgmt", subtitle: "Management",
+    category: "Desktop Application", year: "2022",
     tags: ["Business", "Analytics"],
-    description:
-      "End-to-end distribution management with inventory tracking and sales analytics dashboard.",
-    color: "#9972df",
-    isFigma: false,
+    description: "End-to-end distribution management with inventory tracking and sales analytics dashboard.",
+    color: "#9972df", isFigma: false,
   },
 ];
 
+/* ─── Thumbnail card ─── */
 const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, onProjectChange }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleClick = useCallback(() => {
+  const [hovered, setHovered] = useState(false);
+  const onClick = useCallback(() => {
     if (!isTransitioning && index !== activeIndex) onProjectChange(index);
   }, [index, activeIndex, isTransitioning, onProjectChange]);
 
   return (
     <div
-      onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative cursor-pointer transition-all duration-300 ease-out"
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        // Each card takes equal share of strip width
         flex: "1 1 0",
         minWidth: 0,
-        transform: isActive ? "translateY(-10px)" : "translateY(0px)",
+        cursor: "pointer",
+        transform: isActive ? "translateY(-12px)" : "translateY(0)",
+        transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
       }}
     >
-      <div
-        className="relative rounded-xl overflow-hidden transition-all duration-300"
-        style={{
-          aspectRatio: "3/4",
-          opacity: isActive ? 1 : isHovered ? 0.85 : 0.42,
-          filter: isActive
-            ? "none"
-            : isHovered
-            ? "grayscale(0%) brightness(1.3)"
-            : "grayscale(50%) brightness(0.65)",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black" />
-
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img
-            src={project.icon}
-            alt={project.title}
-            className="w-[30%] h-[30%] object-contain invert transition-all duration-300"
-            style={{ opacity: isActive ? 0.9 : isHovered ? 0.7 : 0.35 }}
-            loading="eager"
-            decoding="async"
-          />
+      <div style={{
+        position: "relative",
+        aspectRatio: "3/4",
+        borderRadius: 10,
+        overflow: "hidden",
+        opacity: isActive ? 1 : hovered ? 0.8 : 0.38,
+        filter: isActive ? "none" : hovered ? "brightness(1.25)" : "grayscale(60%) brightness(0.6)",
+        transition: "opacity 0.3s ease, filter 0.3s ease, outline-color 0.3s ease",
+        outline: isActive ? `1.5px solid ${project.color}` : "1.5px solid transparent",
+      }}>
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a1a,#000)" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <img src={project.icon} alt="" style={{ width: "32%", height: "32%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.9 : 0.4 }} loading="eager" decoding="async" />
         </div>
-
-        <div
-          className="absolute inset-0 transition-opacity duration-300"
-          style={{
-            background: `linear-gradient(to top, ${project.color}CC 0%, ${project.color}44 50%, transparent 80%)`,
-            opacity: isActive ? 1 : isHovered ? 0.85 : 0.5,
-          }}
-        />
-
-        {isActive && (
-          <div
-            className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ backgroundColor: project.color }}
-          />
-        )}
-
-        <div className="absolute bottom-0 left-0 right-0 p-1.5">
-          <p
-            className="font-bold text-white leading-tight truncate"
-            style={{ fontSize: "clamp(8px, 1.1vw, 11px)" }}
-          >
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)` }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "6px 6px 5px" }}>
+          <p style={{ fontSize: "clamp(7px,1vw,10px)", fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {project.title}
           </p>
-          <p
-            className="text-white/60 mt-0.5 truncate"
-            style={{ fontSize: "clamp(7px, 0.9vw, 9px)" }}
-          >
+          <p style={{ fontSize: "clamp(6px,0.8vw,8px)", color: "rgba(255,255,255,0.55)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {project.subtitle}
           </p>
         </div>
@@ -212,254 +137,259 @@ const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, o
   );
 };
 
+/* ─── View Work Button ───────────────────────────────────────────────────────
+   The button lives inside a div with overflow:visible and uses a
+   padding + negative-margin trick so the scale() pop has breathing room
+   on ALL sides — including the left — without shifting the layout.
+   transformOrigin is "center center" so it scales from the middle.
+─────────────────────────────────────────────────────────────────────────── */
+const ViewWorkButton = ({ project }) => {
+  const [hovered, setHovered] = useState(false);
+  if (!project.isFigma) return null;
+
+  return (
+    <div style={{ overflow: "visible", display: "inline-block", padding: 16, margin: -16 }}>
+      <a
+        href={project.figmaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 9,
+          padding: "11px 24px",
+          borderRadius: 100,
+          background: project.color,
+          color: "#fff",
+          fontSize: "clamp(11px,1vw,13px)",
+          fontWeight: 600,
+          textDecoration: "none",
+          letterSpacing: "0.03em",
+          whiteSpace: "nowrap",
+          boxShadow: "none",
+          /* scale from center — no left-side clip */
+          transform: hovered ? "scale(1.08)" : "scale(1)",
+          transformOrigin: "center center",
+          transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1)",
+          willChange: "transform",
+        }}
+      >
+        <img src={figmaIcon} alt="" style={{ width: 13, height: 13, filter: "invert(1)", flexShrink: 0, objectFit: "contain" }} />
+        View Work
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <path d="M7 17L17 7M17 7H7M17 7V17" />
+        </svg>
+      </a>
+    </div>
+  );
+};
+
+/* ─── Main ─── */
 export default function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
 
-  const handleProjectChange = useCallback((e) => {
-    if (isTransitioning) return;
-    const newIndex = e.detail.index;
-    if (newIndex !== activeIndex) {
-      setIsTransitioning(true);
-      setActiveIndex(newIndex);
-      setTimeout(() => setIsTransitioning(false), 400);
-    }
+  const switchTo = useCallback((index) => {
+    if (isTransitioning || index === activeIndex) return;
+    setIsTransitioning(true);
+    setActiveIndex(index);
+    setTimeout(() => setIsTransitioning(false), 400);
   }, [activeIndex, isTransitioning]);
 
   const handleCardClick = useCallback((index) => {
-    if (!isTransitioning && index !== activeIndex) {
-      setIsTransitioning(true);
-      setActiveIndex(index);
-      window.dispatchEvent(new CustomEvent("projectIndexChange", { detail: { index } }));
-      setTimeout(() => setIsTransitioning(false), 400);
-    }
-  }, [activeIndex, isTransitioning]);
+    switchTo(index);
+    window.dispatchEvent(new CustomEvent("projectIndexChange", { detail: { index } }));
+  }, [switchTo]);
 
   useEffect(() => {
-    window.addEventListener("projectIndexChange", handleProjectChange);
-    return () => window.removeEventListener("projectIndexChange", handleProjectChange);
-  }, [handleProjectChange]);
+    const h = (e) => switchTo(e.detail.index);
+    window.addEventListener("projectIndexChange", h);
+    return () => window.removeEventListener("projectIndexChange", h);
+  }, [switchTo]);
+
+  const c = activeProject.color;
 
   return (
     <section
       id="projects"
-      className="relative w-full h-full bg-black"
-      // No overflow:hidden — background clips itself so lifted cards are never cut
+      style={{ position: "relative", width: "100%", height: "100%", background: "#000", overflow: "hidden" }}
     >
-      {/* ── Background (self-clipped) ── */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* ── Background images ── */}
+      <div style={{ position: "absolute", inset: 0 }}>
         {PROJECTS.map((p, i) => (
-          <div
-            key={p.id}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${p.image})`,
-              opacity: i === activeIndex ? 1 : 0,
-              transition: "opacity 0.6s ease-out",
-              zIndex: i === activeIndex ? 1 : 0,
-            }}
-          />
+          <div key={p.id} style={{
+            position: "absolute", inset: 0,
+            backgroundImage: `url(${p.image})`,
+            backgroundSize: "cover", backgroundPosition: "center",
+            opacity: i === activeIndex ? 1 : 0,
+            transition: "opacity 0.7s ease",
+            zIndex: i === activeIndex ? 1 : 0,
+          }} />
         ))}
-        <div
-          className="absolute inset-0"
-          style={{
-            zIndex: 2,
-            background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.2) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            zIndex: 2,
-            background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)",
-          }}
-        />
+        {/* Vignettes */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 38%, rgba(0,0,0,0.1) 68%, transparent 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.65) 32%, transparent 62%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 18%)" }} />
+        {/* Ambient color tint */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 3,
+          background: `radial-gradient(ellipse at 12% 65%, ${c}16 0%, transparent 55%)`,
+          transition: "background 0.7s ease",
+        }} />
       </div>
 
-      {/* ── Foreground: 3-row layout that never overflows ──
-          Row 1: Title          — shrinks text via clamp, fixed mb
-          Row 2: Info panel     — flex:1 with overflow:hidden, text clamped
-          Row 3: Card strip     — fixed height, always pinned at bottom
+      {/* ── Foreground layout ──
+          3 rows:
+            1. Title          — shrinks to content
+            2. Info panel     — flex:1, overflow:VISIBLE (button needs this)
+            3. Card strip     — shrinks to content, overflow:visible for lift
       ── */}
-      <div
-        className="relative h-full flex flex-col"
-        style={{
-          zIndex: 3,
-          padding: "clamp(16px, 3.5vw, 56px) clamp(20px, 5vw, 80px)",
-          gap: 0,
-        }}
-      >
-        {/* ── Row 1: Title ── */}
-        <h2
-          className="font-rockSalt leading-none text-white tracking-tight drop-shadow-lg flex-shrink-0"
-          style={{
-            fontSize: "clamp(28px, 5.5vw, 68px)",
-            marginBottom: "clamp(8px, 1.5vh, 24px)",
-          }}
-        >
+      <div style={{
+        position: "relative", zIndex: 4,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        /* Left padding is the safe zone for the button's scale pop */
+        padding: "clamp(20px,4vw,60px) clamp(24px,5vw,80px) 0 clamp(24px,5vw,80px)",
+        boxSizing: "border-box",
+        /* CRITICAL: no overflow:hidden anywhere in this tree */
+        overflow: "visible",
+      }}>
+
+        {/* ── Row 1: Heading ── */}
+        <h2 className="font-rockSalt" style={{
+          fontSize: "clamp(28px,5.5vw,72px)",
+          color: "#fff", lineHeight: 1, letterSpacing: "-0.01em",
+          margin: "0 0 clamp(12px,2.2vh,32px) 0",
+          flexShrink: 0,
+        }}>
           Projects
         </h2>
 
-        {/* ── Row 2: Info panel — fills remaining space, never pushes cards ── */}
-        <div
-          className="flex-1 flex flex-col justify-center overflow-hidden"
-          style={{ minHeight: 0 }}
-        >
-          {/* Category · Year */}
-          <p
-            className="uppercase font-medium tracking-[0.35em] transition-colors duration-400 flex-shrink-0"
-            style={{
-              fontSize: "clamp(8px, 0.9vw, 11px)",
-              color: activeProject.color,
-              marginBottom: "clamp(4px, 0.8vh, 12px)",
-            }}
-          >
-            {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
-          </p>
+        {/* ── Row 2: Info panel ──
+            overflow:visible is NON-NEGOTIABLE here.
+            Text overflow is handled per-element, not on the container.
+        ── */}
+        <div style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+          overflow: "visible",   // ← button must not clip
+        }}>
 
-          {/* Project Title */}
-          <h3
-            className="font-extralight text-white leading-tight flex-shrink-0"
-            style={{
-              fontSize: "clamp(22px, 3.8vw, 56px)",
-              marginBottom: "clamp(2px, 0.5vh, 8px)",
-            }}
-          >
+          {/* Meta pill: category · year */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "clamp(6px,1vh,14px)", flexShrink: 0 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.4s", flexShrink: 0 }} />
+            <p style={{
+              fontSize: "clamp(9px,0.85vw,11px)", fontWeight: 600,
+              letterSpacing: "0.3em", textTransform: "uppercase",
+              color: c, margin: 0, transition: "color 0.4s",
+            }}>
+              {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
+            </p>
+          </div>
+
+          {/* Title */}
+          <h3 style={{
+            fontSize: "clamp(26px,4.2vw,64px)", fontWeight: 200,
+            color: "#fff", lineHeight: 1.05,
+            margin: "0 0 clamp(2px,0.4vh,8px) 0",
+            flexShrink: 0,
+            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            maxWidth: "55vw",
+          }}>
             {activeProject.title}
           </h3>
 
           {/* Subtitle */}
-          <p
-            className="text-white/55 tracking-wide flex-shrink-0"
-            style={{
-              fontSize: "clamp(11px, 1.2vw, 16px)",
-              marginBottom: "clamp(4px, 0.8vh, 14px)",
-            }}
-          >
+          <p style={{
+            fontSize: "clamp(11px,1.2vw,16px)", color: "rgba(255,255,255,0.5)",
+            letterSpacing: "0.08em", margin: "0 0 clamp(8px,1.2vh,18px) 0",
+            flexShrink: 0,
+          }}>
             {activeProject.subtitle}
           </p>
 
-          {/* Accent divider */}
-          <div
-            className="rounded-full flex-shrink-0 transition-colors duration-500"
-            style={{
-              width: "clamp(32px, 3vw, 48px)",
-              height: "2px",
-              backgroundColor: activeProject.color,
-              marginBottom: "clamp(4px, 0.8vh, 14px)",
-            }}
-          />
+          {/* Accent line */}
+          <div style={{
+            width: "clamp(36px,3.5vw,52px)", height: 2, borderRadius: 2,
+            background: c, transition: "background 0.5s",
+            marginBottom: "clamp(8px,1.2vh,18px)", flexShrink: 0,
+          }} />
 
-          {/* Description — hidden on very small screens if no room */}
-          <p
-            className="text-white/70 leading-relaxed flex-shrink-0"
-            style={{
-              fontSize: "clamp(10px, 1.05vw, 15px)",
-              marginBottom: "clamp(4px, 0.8vh, 16px)",
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
+          {/* Description */}
+          <p style={{
+            fontSize: "clamp(11px,1.05vw,15px)", color: "rgba(255,255,255,0.65)",
+            lineHeight: 1.75, maxWidth: "86ch",
+            margin: "0 0 clamp(10px,1.4vh,20px) 0",
+            flexShrink: 0,
+            display: "-webkit-box", WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical", overflow: "hidden",
+          }}>
             {activeProject.description}
           </p>
 
           {/* Tags */}
-          <div
-            className="flex flex-wrap flex-shrink-0"
-            style={{ gap: "clamp(4px, 0.5vw, 8px)", marginBottom: "clamp(6px, 1vh, 20px)" }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(5px,0.5vw,8px)", flexShrink: 0 }}>
             {activeProject.tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-medium rounded-full transition-all duration-300"
-                style={{
-                  fontSize: "clamp(8px, 0.85vw, 11px)",
-                  padding: "clamp(2px, 0.3vh, 4px) clamp(8px, 0.8vw, 12px)",
-                  border: `1px solid ${activeProject.color}55`,
-                  color: activeProject.color,
-                  backgroundColor: `${activeProject.color}15`,
-                }}
-              >
+              <span key={tag} style={{
+                fontSize: "clamp(9px,0.8vw,11px)", fontWeight: 500,
+                padding: "4px clamp(10px,1vw,14px)", borderRadius: 100,
+                border: `1px solid ${c}40`, color: c, background: `${c}12`,
+                whiteSpace: "nowrap", letterSpacing: "0.03em",
+                transition: "border-color 0.4s, color 0.4s, background 0.4s",
+              }}>
                 {tag}
               </span>
             ))}
           </div>
 
-          {/* View Work button */}
-          <div className="flex-shrink-0" style={{ minHeight: "clamp(28px, 4vh, 44px)" }}>
-            {activeProject.isFigma && (
-              <a
-                href={activeProject.figmaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:brightness-110 active:scale-95"
-                style={{
-                  fontSize: "clamp(10px, 1vw, 14px)",
-                  gap: "clamp(6px, 0.6vw, 10px)",
-                  padding: "clamp(6px, 0.7vh, 10px) clamp(14px, 1.5vw, 24px)",
-                  backgroundColor: activeProject.color,
-                  color: "#fff",
-                  boxShadow: `0 4px 24px ${activeProject.color}50`,
-                }}
-              >
-                <svg width="12" height="12" viewBox="0 0 38 57" fill="none">
-                  <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.51 9.51 0 0 1 19 28.5Z" fill="white" />
-                  <path d="M9.5 57A9.5 9.5 0 0 0 19 47.5V38H9.5A9.5 9.5 0 0 0 9.5 57Z" fill="white" opacity="0.75" />
-                  <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5Z" fill="white" opacity="0.75" />
-                  <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5Z" fill="white" opacity="0.75" />
-                  <path d="M19 0V19H28.5A9.5 9.5 0 0 0 28.5 0Z" fill="white" opacity="0.75" />
-                </svg>
-                View Work
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 17L17 7M17 7H7M17 7V17" />
-                </svg>
-              </a>
-            )}
+          {/*
+            ── Spacer ──
+            Pushes the button down. flex:1 absorbs all remaining height
+            between tags and card strip. minHeight = safety floor.
+          */}
+          <div style={{ flex: 1, minHeight: "clamp(16px,3vh,48px)" }} />
+
+          {/*
+            ── Button wrapper ──
+            padding + negative margin = scale pop never clips on any side.
+            overflow:visible is already inherited from the parent column.
+          */}
+          <div style={{
+            flexShrink: 0,
+            overflow: "visible",
+            paddingBottom: "clamp(12px,2vh,28px)",
+            /* 16px padding on all sides = 8% scale room before clip */
+          }}>
+            <ViewWorkButton project={activeProject} key={activeProject.id} />
           </div>
         </div>
 
-        {/* ── Row 3: Card strip — always at the bottom, fixed height ──
-            The strip wrapper has a set height via aspect-ratio on cards + padding.
-            paddingTop gives lift room so active card never clips.
-            overflow:visible on Y so the lift animation shows above the strip.
-        ── */}
-        <div
-          className="flex-shrink-0"
-          style={{
-            overflow: "visible",
-            marginTop: "clamp(8px, 1.5vh, 20px)",
-          }}
-        >
-          {/* Separator line */}
-          <div
-            className="transition-all duration-500"
-            style={{
-              height: "1px",
-              marginBottom: "clamp(6px, 1vh, 16px)",
-              background: `linear-gradient(to right, ${activeProject.color}80, ${activeProject.color}15, transparent)`,
-            }}
-          />
+        {/* ── Row 3: Card strip ── */}
+        <div style={{ flexShrink: 0, overflow: "visible" }}>
+          {/* Separator */}
+          <div style={{
+            height: 1,
+            background: `linear-gradient(to right, ${c}70, ${c}18 60%, transparent)`,
+            transition: "background 0.5s",
+            marginBottom: "clamp(8px,1.2vh,18px)",
+          }} />
 
-          <style>{`#project-strip::-webkit-scrollbar { display: none; }`}</style>
-          <div
-            id="project-strip"
-            style={{
-              display: "flex",
-              gap: "clamp(4px, 0.6vw, 12px)",
-              alignItems: "flex-end",
-              overflowX: "auto",
-              overflowY: "visible",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              // paddingTop gives the active card lift room — won't clip
-              paddingTop: "14px",
-              paddingBottom: "clamp(4px, 1vh, 12px)",
-            }}
-          >
+          <style>{`#ps::-webkit-scrollbar{display:none}`}</style>
+          <div id="ps" style={{
+            display: "flex",
+            gap: "clamp(5px,0.65vw,12px)",
+            alignItems: "flex-end",
+            overflowX: "visible", overflowY: "visible",
+            scrollbarWidth: "none",
+            paddingTop: 18,   // headroom for translateY(-12px) lift
+            paddingBottom: "clamp(18px,3vh,36px)",
+          }}>
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.id}

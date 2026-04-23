@@ -21,7 +21,7 @@ export default function About() {
       className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center"
     >
       {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.15]">
+      <div className="absolute inset-0 opacity-[0.09]">
         <img
           src={aboutBg}
           alt="about background"
