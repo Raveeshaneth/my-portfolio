@@ -102,14 +102,15 @@ const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
       aspectRatio: "3/4",
       outline: isActive ? `2px solid ${project.color}` : "2px solid transparent",
       outlineOffset: 2,
-      transition: "outline-color 0s, transform 0s",
+      transition: "outline-color 0.2s, transform 0.2s ease-out",
       transform: isActive ? "scale(1.06)" : "scale(1)",
       flexShrink: 0,
       WebkitTapHighlightColor: "transparent",
       background: "linear-gradient(135deg,#1a1a1a,#000)",
+      contain: "layout style paint",
     }}
   >
-    {/* Project image – real <img> so loading=lazy is respected by the browser */}
+    {/* Project image */}
     <img
       src={project.image}
       alt=""
@@ -121,7 +122,7 @@ const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
         width: "100%", height: "100%",
         objectFit: "cover",
         opacity: isActive ? 0.75 : 0.35,
-        transition: "opacity 0s",
+        transition: "opacity 0.2s ease-out",
       }}
     />
 
@@ -129,7 +130,7 @@ const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img
         src={project.icon} alt=""
-        style={{ width: "30%", height: "30%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.95 : 0.4, transition: "opacity 0s" }}
+        style={{ width: "30%", height: "30%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.95 : 0.4, transition: "opacity 0.2s ease-out" }}
         loading="lazy" decoding="async"
       />
     </div>
@@ -139,7 +140,7 @@ const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
       position: "absolute", inset: 0,
       background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)`,
       opacity: isActive ? 1 : 0.45,
-      transition: "opacity 0s",
+      transition: "opacity 0.2s ease-out",
     }} />
 
     {/* Active top line */}
@@ -168,10 +169,9 @@ const ProjectModal = React.memo(({ project, onClose }) => {
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 100,
-        background: "rgba(0,0,0,0.85)",
+        background: "rgba(0,0,0,0.88)",
         display: "flex", alignItems: "flex-end",
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
+        /* Use a simple semi-transparent bg instead of expensive backdrop-filter */
       }}
     >
       <div
@@ -220,7 +220,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
         </button>
 
         {/* Scrollable content */}
-        <div style={{ overflowY: "auto", flex: 1, position: "relative", zIndex: 2 }}>
+        <div style={{ overflowY: "auto", flex: 1, position: "relative", zIndex: 2, WebkitOverflowScrolling: "touch" }}>
           <div style={{ padding: "20px 24px 40px" }}>
 
             {/* Meta */}
@@ -272,7 +272,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
               ))}
             </div>
 
-            {/* View Work button — overflow:visible wrapper, padding+neg-margin trick */}
+            {/* View Work button */}
             {project.isFigma && (
               <div style={{ overflow: "visible", display: "inline-block", padding: 14, margin: -14 }}>
                 <a
@@ -297,7 +297,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
                     boxShadow: "none",
                     transform: btnHovered ? "scale(1.06)" : "scale(1)",
                     transformOrigin: "center center",
-                    transition: "transform 0s",
+                    transition: "transform 0.2s ease-out",
                     willChange: "transform",
                   }}
                 >
@@ -322,8 +322,6 @@ ProjectModal.displayName = "ProjectModal";
 export default function ProjectsMobile() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
-  /* track which bg images have ever been needed – keeps them cached once loaded */
-  const [loadedSet, setLoadedSet] = useState(() => new Set([0]));
   const sectionRef = useRef(null);
 
   /* Defer ALL image network requests until section is near the viewport */
@@ -334,7 +332,7 @@ export default function ProjectsMobile() {
     if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
-      { rootMargin: "200px" }   // start loading 200 px before section enters screen
+      { rootMargin: "600px" }   // start loading images well before section enters screen
     );
     io.observe(el);
     return () => io.disconnect();
@@ -348,14 +346,6 @@ export default function ProjectsMobile() {
       setSelectedProject(PROJECTS[index]);
     } else {
       setActiveIndex(index);
-      /* pre-load neighbours so they're ready before the user taps again */
-      setLoadedSet(prev => {
-        const next = new Set(prev);
-        [index - 1, index, index + 1].forEach(i => {
-          if (i >= 0 && i < PROJECTS.length) next.add(i);
-        });
-        return next;
-      });
     }
   }, [activeIndex]);
 
@@ -379,23 +369,36 @@ export default function ProjectsMobile() {
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          contain: "layout style paint",
         }}
       >
-        {/* ── Background images – only mount images that have been needed ── */}
+        {/* ── Background – only 2 layers: current + previous ── */}
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          {inView && PROJECTS.map((p, i) => {
-            if (!loadedSet.has(i)) return null;   // not yet needed – skip entirely
-            return (
-              <div key={p.id} style={{
+          {inView && PROJECTS.map((project, index) => (
+            /*
+             * Render ALL background images as <img> tags (not CSS backgroundImage).
+             * This lets the browser use loading/decoding/fetchpriority attributes.
+             * Only the active one is visible (opacity:1); others are opacity:0 but
+             * already decoded and GPU-composited, so switching is instant.
+             */
+            <img
+              key={project.id}
+              src={project.image}
+              alt=""
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding={index === 0 ? "sync" : "async"}
+              fetchPriority={index === 0 ? "high" : "low"}
+              style={{
                 position: "absolute", inset: 0,
-                backgroundImage: `url(${p.image})`,
-                backgroundSize: "cover", backgroundPosition: "center",
-                opacity: i === activeIndex ? 1 : 0,
-                transition: "opacity 0s",
-                zIndex: i === activeIndex ? 1 : 0,
-              }} />
-            );
-          })}
+                width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "center",
+                opacity: index === activeIndex ? 1 : 0,
+                transition: "opacity 0.35s ease-out",
+                zIndex: 0,
+                willChange: index === activeIndex ? "opacity" : "auto",
+              }}
+            />
+          ))}
           {/* Vignettes — heavier on mobile for readability */}
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.85) 80%, rgba(0,0,0,0.99) 100%)" }} />
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 70%)" }} />
@@ -403,7 +406,7 @@ export default function ProjectsMobile() {
           <div style={{
             position: "absolute", inset: 0, zIndex: 3,
             background: `radial-gradient(ellipse at 20% 70%, ${c}20 0%, transparent 60%)`,
-            transition: "background 0s",
+            transition: "background 0.3s ease-out",
           }} />
         </div>
 
@@ -433,10 +436,10 @@ export default function ProjectsMobile() {
 
             {/* Meta */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10, flexShrink: 0 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0s", flexShrink: 0 }} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.25s ease-out", flexShrink: 0 }} />
               <p style={{
                 fontSize: 10, fontWeight: 600, letterSpacing: "0.28em",
-                textTransform: "uppercase", color: c, margin: 0, transition: "color 0s",
+                textTransform: "uppercase", color: c, margin: 0, transition: "color 0.25s ease-out",
               }}>
                 {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
               </p>
@@ -463,7 +466,7 @@ export default function ProjectsMobile() {
             {/* Accent line */}
             <div style={{
               width: 40, height: 2, borderRadius: 2,
-              background: c, transition: "background 0s",
+              background: c, transition: "background 0.25s ease-out",
               marginBottom: 14, flexShrink: 0,
             }} />
 
@@ -485,7 +488,7 @@ export default function ProjectsMobile() {
                   padding: "4px 11px", borderRadius: 100,
                   border: `1px solid ${c}40`, color: c, background: `${c}12`,
                   whiteSpace: "nowrap", letterSpacing: "0.03em",
-                  transition: "border-color 0s, color 0s, background 0s",
+                  transition: "border-color 0.25s ease-out, color 0.25s ease-out, background 0.25s ease-out",
                 }}>
                   {tag}
                 </span>
@@ -537,7 +540,7 @@ export default function ProjectsMobile() {
             <div style={{
               height: 1,
               background: `linear-gradient(to right, transparent, ${c}70 20%, ${c}18 80%, transparent)`,
-              transition: "background 0s",
+              transition: "background 0.25s ease-out",
               marginBottom: 12,
             }} />
 
@@ -548,9 +551,9 @@ export default function ProjectsMobile() {
               overflowX: "auto", overflowY: "visible",
               paddingBottom: "clamp(20px,4vh,36px)",
               paddingTop: 8,
-              /* Side padding so first/last card outlines aren't clipped */
               paddingLeft: 6,
               paddingRight: 6,
+              WebkitOverflowScrolling: "touch",
             }}>
               {PROJECTS.map((project, index) => (
                 <div key={project.id} style={{ width: "clamp(64px,18vw,88px)", flexShrink: 0 }}>

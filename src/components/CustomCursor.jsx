@@ -1,58 +1,54 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Two-part custom cursor matching chkstepan.com:
- *  • Inner dot  — 6 px, instant follow
- *  • Outer ring — 36 px, lerp lag, expands on hover
- * Both use mix-blend-mode: difference so they invert over text.
+ * SVG arrow cursor that auto-inverts colour via mix-blend-mode: difference.
+ * White arrow  →  appears BLACK on white/light backgrounds
+ *              →  appears WHITE on black/dark backgrounds
+ *
+ * Desktop only — App.jsx mounts this only when !isMobile.
  */
 export default function CustomCursor() {
-  const dotRef = useRef(null);
-  const ringRef = useRef(null);
-  const pos = useRef({ x: -100, y: -100 });
-  const ring = useRef({ x: -100, y: -100 });
-  const hovered = useRef(false);
-  const rafId = useRef(null);
+  const cursorRef = useRef(null);
+  const pos       = useRef({ x: -200, y: -200 });
+  const rafId     = useRef(null);
+  const hovered   = useRef(false);
 
   useEffect(() => {
-    const dot = dotRef.current;
-    const ringEl = ringRef.current;
-    if (!dot || !ringEl) return;
+    const el = cursorRef.current;
+    if (!el) return;
 
+    // Hide the native OS cursor everywhere
+    document.documentElement.style.cursor = "none";
     document.body.style.cursor = "none";
-
-    const DOT_SIZE = 6;
-    const RING_SIZE = 34;
-    const RING_BIG = 64;
 
     const onMove = (e) => {
       pos.current = { x: e.clientX, y: e.clientY };
     };
 
-    // Detect hover on interactive elements
-    const addHover = (el) => { el.addEventListener("mouseenter", () => { hovered.current = true; }); };
-    const removeHover = (el) => { el.addEventListener("mouseleave", () => { hovered.current = false; }); };
+    // Scale up slightly on interactive elements
+    const onEnter = () => { hovered.current = true; };
+    const onLeave = () => { hovered.current = false; };
 
-    const interactive = document.querySelectorAll("a, button, [role='button'], input, select, textarea, label");
-    interactive.forEach(el => { addHover(el); removeHover(el); });
+    const attachHover = () => {
+      document.querySelectorAll(
+        "a, button, [role='button'], input, select, textarea, label"
+      ).forEach((node) => {
+        node.addEventListener("mouseenter", onEnter);
+        node.addEventListener("mouseleave", onLeave);
+      });
+    };
+    attachHover();
 
-    // rAF loop
+    // Re-attach after GSAP / dynamic content changes
+    const mo = new MutationObserver(attachHover);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    // rAF loop — instant follow (no lag, it's an arrow not a ring)
     const loop = () => {
       const { x, y } = pos.current;
-      const r = ring.current;
-      const speed = hovered.current ? 0.1 : 0.14;
-      r.x += (x - r.x) * speed;
-      r.y += (y - r.y) * speed;
-
-      // Inner dot — instant
-      dot.style.transform = `translate(${x - DOT_SIZE / 2}px, ${y - DOT_SIZE / 2}px)`;
-
-      // Outer ring — lagged
-      const rSize = hovered.current ? RING_BIG : RING_SIZE;
-      ringEl.style.width = rSize + "px";
-      ringEl.style.height = rSize + "px";
-      ringEl.style.transform = `translate(${r.x - rSize / 2}px, ${r.y - rSize / 2}px)`;
-
+      const scale = hovered.current ? 1.18 : 1;
+      // Hotspot is at (4,2) inside the 24×26 SVG, so offset by that amount
+      el.style.transform = `translate(${x - 4}px, ${y - 2}px) scale(${scale})`;
       rafId.current = requestAnimationFrame(loop);
     };
 
@@ -60,49 +56,52 @@ export default function CustomCursor() {
     rafId.current = requestAnimationFrame(loop);
 
     return () => {
+      document.documentElement.style.cursor = "";
       document.body.style.cursor = "";
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafId.current);
+      mo.disconnect();
     };
   }, []);
 
-  const shared = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    borderRadius: "50%",
-    mixBlendMode: "difference",
-    pointerEvents: "none",
-    zIndex: 99999,
-    willChange: "transform",
-  };
-
   return (
     <>
-      {/* Inner dot — instant */}
+      {/* Inject cursor:none on every element so Tailwind classes can't override */}
+      <style>{`*, *::before, *::after { cursor: none !important; }`}</style>
+
       <div
-        ref={dotRef}
+        ref={cursorRef}
         aria-hidden="true"
         style={{
-          ...shared,
-          width: 6,
-          height: 6,
-          background: "#fff",
+          position:      "fixed",
+          top:           0,
+          left:          0,
+          pointerEvents: "none",
+          zIndex:        99999,
+          willChange:    "transform",
+          mixBlendMode:  "difference",
+          transformOrigin: "4px 2px",   // matches the SVG hotspot
+          transition:    "transform 0.15s cubic-bezier(0.34,1.56,0.64,1)",
         }}
-      />
-      {/* Outer ring — lagged */}
-      <div
-        ref={ringRef}
-        aria-hidden="true"
-        style={{
-          ...shared,
-          width: 34,
-          height: 34,
-          background: "transparent",
-          border: "1.5px solid #fff",
-          transition: "width 0.25s ease, height 0.25s ease",
-        }}
-      />
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="26"
+          viewBox="0 0 24 26"
+          style={{ display: "block" }}
+        >
+          {/* Arrow path — tip at (4,2), hotspot origin */}
+          <path
+            d="M4,2 L4,20 L8.5,15.5 L12,23 L14.5,22 L11,14.5 L17,14.5 Z"
+            fill="white"
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth="0.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
     </>
   );
 }

@@ -1,18 +1,20 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import React from "react";
 
 import androidIcon from "../assets/android.png";
 import figmaIcon from "../assets/figma.png";
 import desktopIcon from "../assets/java.png";
 import hashtagIcon from "../assets/hashtag.png";
 
-import project1 from "../assets/project1.webp";
-import project2 from "../assets/project2.webp";
-import project3 from "../assets/project3.webp";
-import project4 from "../assets/project4.webp";
-import project5 from "../assets/project5.webp";
-import project6 from "../assets/project6.webp";
-import project7 from "../assets/project7.webp";
-import project8 from "../assets/project8.webp";
+/* ── Resolve image URLs without eagerly bundling the binary data ── */
+const project1 = new URL("../assets/project1.webp", import.meta.url).href;
+const project2 = new URL("../assets/project2.webp", import.meta.url).href;
+const project3 = new URL("../assets/project3.webp", import.meta.url).href;
+const project4 = new URL("../assets/project4.webp", import.meta.url).href;
+const project5 = new URL("../assets/project5.webp", import.meta.url).href;
+const project6 = new URL("../assets/project6.webp", import.meta.url).href;
+const project7 = new URL("../assets/project7.webp", import.meta.url).href;
+const project8 = new URL("../assets/project8.webp", import.meta.url).href;
 
 const PROJECTS = [
   {
@@ -90,7 +92,7 @@ const PROJECTS = [
 ];
 
 /* ─── Thumbnail card ─── */
-const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, onProjectChange }) => {
+const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTransitioning, onProjectChange }) => {
   const [hovered, setHovered] = useState(false);
   const onClick = useCallback(() => {
     if (!isTransitioning && index !== activeIndex) onProjectChange(index);
@@ -118,6 +120,7 @@ const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, o
         filter: isActive ? "none" : hovered ? "brightness(1.25)" : "grayscale(60%) brightness(0.6)",
         transition: "opacity 0.3s ease, filter 0.3s ease, outline-color 0.3s ease",
         outline: isActive ? `1.5px solid ${project.color}` : "1.5px solid transparent",
+        contain: "layout style paint",
       }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a1a,#000)" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -135,15 +138,12 @@ const ProjectCard = ({ project, isActive, index, activeIndex, isTransitioning, o
       </div>
     </div>
   );
-};
+});
 
-/* ─── View Work Button ───────────────────────────────────────────────────────
-   The button lives inside a div with overflow:visible and uses a
-   padding + negative-margin trick so the scale() pop has breathing room
-   on ALL sides — including the left — without shifting the layout.
-   transformOrigin is "center center" so it scales from the middle.
-─────────────────────────────────────────────────────────────────────────── */
-const ViewWorkButton = ({ project }) => {
+ProjectCard.displayName = "ProjectCard";
+
+/* ─── View Work Button ─── */
+const ViewWorkButton = React.memo(({ project }) => {
   const [hovered, setHovered] = useState(false);
   if (!project.isFigma) return null;
 
@@ -169,7 +169,6 @@ const ViewWorkButton = ({ project }) => {
           letterSpacing: "0.03em",
           whiteSpace: "nowrap",
           boxShadow: "none",
-          /* scale from center — no left-side clip */
           transform: hovered ? "scale(1.08)" : "scale(1)",
           transformOrigin: "center center",
           transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1)",
@@ -184,20 +183,38 @@ const ViewWorkButton = ({ project }) => {
       </a>
     </div>
   );
-};
+});
+
+ViewWorkButton.displayName = "ViewWorkButton";
 
 /* ─── Main ─── */
 export default function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(-1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
+  const transitionTimerRef = useRef(null);
 
   const switchTo = useCallback((index) => {
     if (isTransitioning || index === activeIndex) return;
     setIsTransitioning(true);
+    setPrevIndex(activeIndex);
     setActiveIndex(index);
-    setTimeout(() => setIsTransitioning(false), 400);
+
+    // Clear any existing timer
+    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+      setPrevIndex(-1);
+    }, 500);
   }, [activeIndex, isTransitioning]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    };
+  }, []);
 
   const handleCardClick = useCallback((index) => {
     switchTo(index);
@@ -215,20 +232,41 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      style={{ position: "relative", width: "100%", height: "100%", background: "#000", overflow: "hidden" }}
+      style={{
+        position: "relative", width: "100%", height: "100%",
+        background: "#000", overflow: "hidden",
+        contain: "layout style paint",
+      }}
     >
-      {/* ── Background images ── */}
+      {/* ── Background – only 2 layers: current + previous (crossfade) ── */}
       <div style={{ position: "absolute", inset: 0 }}>
-        {PROJECTS.map((p, i) => (
-          <div key={p.id} style={{
+        {/* Previous image – fading out */}
+        {prevIndex >= 0 && (
+          <div
+            key={`bg-prev-${prevIndex}`}
+            style={{
+              position: "absolute", inset: 0,
+              backgroundImage: `url(${PROJECTS[prevIndex].image})`,
+              backgroundSize: "cover", backgroundPosition: "center",
+              opacity: 0,
+              transition: "opacity 0.6s ease-out",
+              zIndex: 0,
+              willChange: "opacity",
+            }}
+          />
+        )}
+        {/* Current image – fading in */}
+        <div
+          key={`bg-curr-${activeIndex}`}
+          style={{
             position: "absolute", inset: 0,
-            backgroundImage: `url(${p.image})`,
+            backgroundImage: `url(${PROJECTS[activeIndex].image})`,
             backgroundSize: "cover", backgroundPosition: "center",
-            opacity: i === activeIndex ? 1 : 0,
-            transition: "opacity 0.7s ease",
-            zIndex: i === activeIndex ? 1 : 0,
-          }} />
-        ))}
+            opacity: 1,
+            zIndex: 1,
+          }}
+        />
+
         {/* Vignettes */}
         <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 38%, rgba(0,0,0,0.1) 68%, transparent 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.65) 32%, transparent 62%)" }} />
@@ -237,25 +275,18 @@ export default function Projects() {
         <div style={{
           position: "absolute", inset: 0, zIndex: 3,
           background: `radial-gradient(ellipse at 12% 65%, ${c}16 0%, transparent 55%)`,
-          transition: "background 0.7s ease",
+          transition: "background 0.6s ease",
         }} />
       </div>
 
-      {/* ── Foreground layout ──
-          3 rows:
-            1. Title          — shrinks to content
-            2. Info panel     — flex:1, overflow:VISIBLE (button needs this)
-            3. Card strip     — shrinks to content, overflow:visible for lift
-      ── */}
+      {/* ── Foreground layout ── */}
       <div style={{
         position: "relative", zIndex: 4,
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        /* Left padding is the safe zone for the button's scale pop */
         padding: "clamp(20px,4vw,60px) clamp(24px,5vw,80px) 0 clamp(24px,5vw,80px)",
         boxSizing: "border-box",
-        /* CRITICAL: no overflow:hidden anywhere in this tree */
         overflow: "visible",
       }}>
 
@@ -269,19 +300,17 @@ export default function Projects() {
           Projects
         </h2>
 
-        {/* ── Row 2: Info panel ──
-            overflow:visible is NON-NEGOTIABLE here.
-            Text overflow is handled per-element, not on the container.
-        ── */}
+        {/* ── Row 2: Info panel ── */}
         <div style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           minHeight: 0,
-          overflow: "visible",   // ← button must not clip
+          overflow: "visible",
           opacity: isTransitioning ? 0 : 1,
           transform: isTransitioning ? "translateY(15px)" : "translateY(0)",
           transition: "opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
+          willChange: isTransitioning ? "opacity, transform" : "auto",
         }}>
 
           {/* Meta pill: category · year */}
@@ -351,23 +380,14 @@ export default function Projects() {
             ))}
           </div>
 
-          {/*
-            ── Spacer ──
-            Pushes the button down. flex:1 absorbs all remaining height
-            between tags and card strip. minHeight = safety floor.
-          */}
+          {/* Spacer */}
           <div style={{ flex: 1, minHeight: "clamp(16px,3vh,48px)" }} />
 
-          {/*
-            ── Button wrapper ──
-            padding + negative margin = scale pop never clips on any side.
-            overflow:visible is already inherited from the parent column.
-          */}
+          {/* Button wrapper */}
           <div style={{
             flexShrink: 0,
             overflow: "visible",
             paddingBottom: "clamp(12px,2vh,28px)",
-            /* 16px padding on all sides = 8% scale room before clip */
           }}>
             <ViewWorkButton project={activeProject} key={activeProject.id} />
           </div>
@@ -390,7 +410,7 @@ export default function Projects() {
             alignItems: "flex-end",
             overflowX: "visible", overflowY: "visible",
             scrollbarWidth: "none",
-            paddingTop: 18,   // headroom for translateY(-12px) lift
+            paddingTop: 18,
             paddingBottom: "clamp(18px,3vh,36px)",
           }}>
             {PROJECTS.map((project, index) => (

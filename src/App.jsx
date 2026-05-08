@@ -35,7 +35,7 @@ export default function App() {
       )}
 
       {/* ── App content — always in the DOM so it's ready when loader exits ── */}
-      {/* Custom cursor — desktop only */}
+      {/* Custom cursor — desktop only (SVG arrow + mix-blend-mode:difference) */}
       {!isMobile && <CustomCursor />}
       <Navbar />
 

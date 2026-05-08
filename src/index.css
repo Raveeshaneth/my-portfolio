@@ -62,16 +62,22 @@ html {
 /* PERFORMANCE OPTIMIZATIONS */
 /* ===================== */
 
-/* GPU acceleration for animations */
+/* GPU acceleration for panel transitions */
 section.panel {
   transform: translateZ(0);
-  will-change: transform;
   backface-visibility: hidden;
+  contain: layout style paint;
 }
 
-/* Optimize images */
+/* Optimize images globally */
 img {
   contain: layout style paint;
+}
+
+/* Isolate projects section rendering */
+#projects {
+  contain: layout style paint;
+  isolation: isolate;
 }
 
 /* Reduce animation on low-power devices */
