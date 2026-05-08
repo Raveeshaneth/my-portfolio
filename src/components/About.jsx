@@ -20,8 +20,8 @@ export default function About() {
       id="about"
       className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center"
     >
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.09]">
+      {/* Background grid — desktop only */}
+      <div className="hidden lg:block absolute inset-0 opacity-[0.09]">
         <img
           src={aboutBg}
           alt="about background"
@@ -33,9 +33,9 @@ export default function About() {
       <div className="absolute inset-0 bg-gradient-to-br from-[#3e2723]/30 via-transparent to-[#8d6e63]/20" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-      {/* Accent glows */}
-      <div className="absolute top-24 right-24 w-48 h-48 bg-[#a1887f]/15 rounded-full blur-3xl animate-pulseGlow" />
-      <div className="absolute bottom-32 left-32 w-56 h-56 bg-[#6d4c41]/15 rounded-full blur-3xl animate-pulse" />
+      {/* Accent glows — desktop only (too heavy & cluttered on mobile) */}
+      <div className="hidden lg:block absolute top-24 right-24 w-48 h-48 bg-[#a1887f]/15 rounded-full blur-3xl animate-pulseGlow" />
+      <div className="hidden lg:block absolute bottom-32 left-32 w-56 h-56 bg-[#6d4c41]/15 rounded-full blur-3xl animate-pulse" />
 
       {/* Content */}
       <div className="relative w-full max-w-[1400px] px-6 md:px-12 lg:px-20 py-16">
@@ -43,12 +43,12 @@ export default function About() {
 
           {/* Header */}
           <div
-            className={`mb-14 transition-all duration-1000 ${
+            className={`mb-8 lg:mb-14 transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <div className="flex items-baseline gap-4 mb-6">
-              <h2 className="font-rockSalt text-[48px] md:text-[64px] lg:text-[80px] text-white">
+            <div className="flex items-baseline gap-4 mb-4 lg:mb-6">
+              <h2 className="font-rockSalt text-[36px] md:text-[56px] lg:text-[80px] text-white">
                 About
               </h2>
               <span className="text-white/50 text-lg font-light">me</span>
@@ -64,7 +64,7 @@ export default function About() {
                 : "opacity-0 translate-y-6"
             }`}
           >
-            <p className="font-sawarabi text-[18px] md:text-[22px] lg:text-[26px] leading-relaxed text-white/95">
+            <p className="font-sawarabi text-[15px] md:text-[20px] lg:text-[26px] leading-relaxed text-white/95">
               I'm a{" "}
               <span className="text-white font-normal">
                 software engineering student
@@ -72,7 +72,7 @@ export default function About() {
               with a strong interest in UI/UX and frontend development.
             </p>
 
-            <p className="font-sawarabi text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed text-white/70 max-w-3xl">
+            <p className="font-sawarabi text-[13px] md:text-[16px] lg:text-[19px] leading-relaxed text-white/70 max-w-3xl">
               I enjoy designing clean, modern interfaces and learning how real
               products are crafted from idea to execution. My goal is to combine
               thoughtful design with smooth interactions to build experiences

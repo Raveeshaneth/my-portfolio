@@ -41,11 +41,11 @@ export default function Hero() {
         <div className="w-full max-w-[1600px]">
 
           {/* Mobile Layout: Column */}
-          <div className="lg:hidden flex flex-col items-center text-center space-y-6 pt-8">
+          <div className="lg:hidden flex flex-col items-center text-center space-y-4 pt-4">
             {/* Text First on Mobile */}
-            <div className="space-y-4 z-10 w-full">
+            <div className="space-y-3 z-10 w-full">
               {/* Available for Work Badge - Fixed for mobile visibility */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-4 will-change-auto">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-3 will-change-auto">
                 <div className="relative">
                   <div className="w-2 h-2 bg-green-800 rounded-full" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
                   <div className="absolute inset-0 w-2 h-2 bg-green-600 rounded-full" style={{ animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite' }} />
@@ -55,7 +55,7 @@ export default function Hero() {
                 </p>
               </div>
 
-              <h1 className="font-protest text-[38px] md:text-[54px] leading-[0.88] tracking-tight px-4">
+              <h1 className="font-protest text-[34px] md:text-[54px] leading-[0.88] tracking-tight px-4">
                 <span className="text-[#3e2723]">UI/UX</span>
                 <br />
                 <span className="bg-gradient-to-r from-[#6d4c41] via-[#8d6e63] to-[#a1887f] bg-clip-text text-transparent">Designer</span>
@@ -63,16 +63,16 @@ export default function Hero() {
 
               <div className="h-px bg-gradient-to-r from-transparent via-[#6d4c41]/30 to-transparent w-48 mx-auto" />
 
-              <p className="font-rockSalt text-[22px] md:text-[28px] text-black/85 leading-tight px-4">
+              <p className="font-rockSalt text-[20px] md:text-[28px] text-black/85 leading-tight px-4">
                 Hi, I'm <span className="bg-gradient-to-r from-[#6d4c41] to-[#8d6e63] bg-clip-text text-transparent">Raveesha</span>
               </p>
-              <p className="text-[14px] md:text-base text-black/60 max-w-sm mx-auto leading-relaxed px-6">
+              <p className="text-[13px] md:text-base text-black/60 max-w-sm mx-auto leading-relaxed px-6">
                 A second-year <span className="font-semibold">Software Engineering</span> undergraduate at <span className="font-semibold">NIBM</span>, passionate about creating
                 digital experiences that blend aesthetics with functionality
               </p>
 
               {/* CV Download Button */}
-              <div className="pt-2">
+              <div className="pt-1">
                 <a
                   href="/Raveesha Nethmina Gonaduwa CV.pdf"
                   download="Raveesha Nethmina Gonaduwa CV.pdf"
@@ -87,7 +87,7 @@ export default function Hero() {
             </div>
 
             {/* Illustration After on Mobile */}
-            <div className="relative w-full max-w-[320px] md:max-w-[380px] mt-6">
+            <div className="relative w-full max-w-[280px] md:max-w-[360px] mt-2">
               {/* Darker brown glow for mobile */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#6d4c41]/25 via-[#8d6e63]/20 to-[#a1887f]/15 rounded-full blur-3xl will-change-auto" />
 

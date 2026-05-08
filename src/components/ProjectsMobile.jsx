@@ -91,7 +91,7 @@ const PROJECTS = [
 ];
 
 /* ─── Thumbnail grid card ─── */
-const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
+const ProjectCard = React.memo(({ project, isActive, onClick }) => (
   <div
     onClick={onClick}
     style={{
@@ -106,40 +106,35 @@ const ProjectCard = React.memo(({ project, isActive, onClick, eager }) => (
       transform: isActive ? "scale(1.06)" : "scale(1)",
       flexShrink: 0,
       WebkitTapHighlightColor: "transparent",
-      background: "linear-gradient(135deg,#1a1a1a,#000)",
+      /* Gradient background — no photo needed at this tiny card size */
+      background: isActive
+        ? `linear-gradient(145deg, ${project.color}55 0%, #111 60%, #000 100%)`
+        : `linear-gradient(145deg, ${project.color}22 0%, #111 70%, #000 100%)`,
       contain: "layout style paint",
     }}
   >
-    {/* Project image */}
-    <img
-      src={project.image}
-      alt=""
-      loading={eager ? "eager" : "lazy"}
-      decoding="async"
-      fetchpriority={eager ? "high" : "low"}
-      style={{
-        position: "absolute", inset: 0,
-        width: "100%", height: "100%",
-        objectFit: "cover",
-        opacity: isActive ? 0.75 : 0.35,
-        transition: "opacity 0.2s ease-out",
-      }}
-    />
+    {/* Radial accent glow when active */}
+    <div style={{
+      position: "absolute", inset: 0,
+      background: isActive
+        ? `radial-gradient(ellipse at 50% 15%, ${project.color}50 0%, transparent 65%)`
+        : "none",
+    }} />
 
-    {/* Icon */}
+    {/* Icon — more prominent without photo noise */}
     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img
         src={project.icon} alt=""
-        style={{ width: "30%", height: "30%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.95 : 0.4, transition: "opacity 0.2s ease-out" }}
+        style={{ width: "34%", height: "34%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 1 : 0.45, transition: "opacity 0.2s ease-out" }}
         loading="lazy" decoding="async"
       />
     </div>
 
-    {/* Color gradient */}
+    {/* Bottom color wash */}
     <div style={{
       position: "absolute", inset: 0,
-      background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)`,
-      opacity: isActive ? 1 : 0.45,
+      background: `linear-gradient(to top, ${project.color}bb 0%, transparent 60%)`,
+      opacity: isActive ? 1 : 0.55,
       transition: "opacity 0.2s ease-out",
     }} />
 
@@ -332,7 +327,7 @@ export default function ProjectsMobile() {
     if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
-      { rootMargin: "600px" }   // start loading images well before section enters screen
+      { rootMargin: "200px" }   // load just before visible — don't compete with hero bandwidth
     );
     io.observe(el);
     return () => io.disconnect();
@@ -393,7 +388,7 @@ export default function ProjectsMobile() {
                 width: "100%", height: "100%",
                 objectFit: "cover", objectPosition: "center",
                 opacity: index === activeIndex ? 1 : 0,
-                transition: "opacity 0.35s ease-out",
+                transition: "opacity 0.2s ease-out",
                 zIndex: 0,
                 willChange: index === activeIndex ? "opacity" : "auto",
               }}
@@ -565,6 +560,12 @@ export default function ProjectsMobile() {
                   />
                 </div>
               ))}
+              {/* Scroll-hint fade on the right edge */}
+              <div style={{
+                flexShrink: 0, width: 32, alignSelf: "stretch",
+                background: "linear-gradient(to right, transparent, rgba(0,0,0,0.6))",
+                pointerEvents: "none",
+              }} />
             </div>
           </div>
         </div>

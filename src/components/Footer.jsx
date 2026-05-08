@@ -5,7 +5,8 @@ export default function Footer() {
 
   const socialLinks = [
     { name: "LinkedIn", url: "https://www.linkedin.com/in/raveesha-nethmina-985858290/" },
-    { name: "GitHub", url: "https://github.com/Raveeshaneth" },
+    { name: "GitHub",   url: "https://github.com/Raveeshaneth" },
+    { name: "Behance",  url: "https://www.behance.net/" },
   ];
 
   return (
@@ -62,7 +63,7 @@ export default function Footer() {
                   Contact
                 </h4>
                 <div className="space-y-2 md:space-y-3 text-sm md:text-base text-white/80">
-                  <p>raveeshanethmina@gmail.com</p>
+                  <a href="mailto:raveeshanethmina@gmail.com" className="block text-sm md:text-base text-white/80 hover:text-white transition-colors duration-300">raveeshanethmina@gmail.com</a>
                   <p>Colombo, Sri Lanka</p>
                 </div>
               </div>
