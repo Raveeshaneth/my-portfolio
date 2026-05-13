@@ -10,9 +10,6 @@ import hashtagIcon from "../assets/hashtag.png";
 const project1 = new URL("../assets/project1.webp", import.meta.url).href;
 const project2 = new URL("../assets/project2.webp", import.meta.url).href;
 const project3 = new URL("../assets/project3.webp", import.meta.url).href;
-const project4 = new URL("../assets/project4.webp", import.meta.url).href;
-const project5 = new URL("../assets/project5.webp", import.meta.url).href;
-const project6 = new URL("../assets/project6.webp", import.meta.url).href;
 const project7 = new URL("../assets/project7.webp", import.meta.url).href;
 const project8 = new URL("../assets/project8.webp", import.meta.url).href;
 
@@ -59,35 +56,11 @@ const PROJECTS = [
   },
   {
     id: 4, icon: androidIcon, image: project1,
-    title: "Tuition Mgmt", subtitle: "Mobile App",
+    title: "Tuition Management", subtitle: "Mobile App",
     category: "Mobile Application", year: "2024",
     tags: ["Android", "UI/UX"],
     description: "Complete mobile solution for managing tuition classes with attendance tracking and payment processing.",
     color: "#8670f7", isFigma: false,
-  },
-  {
-    id: 5, icon: hashtagIcon, image: project4,
-    title: "Hospital System", subtitle: "Healthcare",
-    category: "Desktop Application", year: "2023",
-    tags: ["Healthcare", "Desktop"],
-    description: "Comprehensive hospital management system for patient records, appointments, and medical workflows.",
-    color: "#00BCD4", isFigma: false,
-  },
-  {
-    id: 6, icon: desktopIcon, image: project5,
-    title: "Medicare", subtitle: "Appointment",
-    category: "Desktop Application", year: "2023",
-    tags: ["Healthcare", "System"],
-    description: "Streamlined appointment scheduling system with automated reminders and calendar management.",
-    color: "#e46e00", isFigma: false,
-  },
-  {
-    id: 7, icon: hashtagIcon, image: project6,
-    title: "Distribution Mgmt", subtitle: "Management",
-    category: "Desktop Application", year: "2022",
-    tags: ["Business", "Analytics"],
-    description: "End-to-end distribution management with inventory tracking and sales analytics dashboard.",
-    color: "#9972df", isFigma: false,
   },
 ];
 
