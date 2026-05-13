@@ -64,7 +64,7 @@ const PROJECTS = [
   },
 ];
 
-/* ─── Thumbnail card ─── */
+/* ─── Thumbnail card (vertical) ─── */
 const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTransitioning, onProjectChange }) => {
   const [hovered, setHovered] = useState(false);
   const onClick = useCallback(() => {
@@ -77,10 +77,11 @@ const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTrans
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        flex: "1 1 0",
-        minWidth: 0,
+        width: "clamp(52px, 6vw, 88px)",
+        flexShrink: 0,
         cursor: "pointer",
-        transform: isActive ? "translateY(-12px)" : "translateY(0)",
+        /* active card nudges right instead of up */
+        transform: isActive ? "translateX(8px)" : "translateX(0)",
         transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
       }}
     >
@@ -174,7 +175,6 @@ export default function Projects() {
     setPrevIndex(activeIndex);
     setActiveIndex(index);
 
-    // Clear any existing timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     transitionTimerRef.current = setTimeout(() => {
       setIsTransitioning(false);
@@ -182,7 +182,6 @@ export default function Projects() {
     }, 500);
   }, [activeIndex, isTransitioning]);
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
@@ -211,9 +210,8 @@ export default function Projects() {
         contain: "layout style paint",
       }}
     >
-      {/* ── Background – only 2 layers: current + previous (crossfade) ── */}
+      {/* ── Background crossfade ── */}
       <div style={{ position: "absolute", inset: 0 }}>
-        {/* Previous image – fading out */}
         {prevIndex >= 0 && (
           <div
             key={`bg-prev-${prevIndex}`}
@@ -228,7 +226,6 @@ export default function Projects() {
             }}
           />
         )}
-        {/* Current image – fading in */}
         <div
           key={`bg-curr-${activeIndex}`}
           style={{
@@ -239,12 +236,10 @@ export default function Projects() {
             zIndex: 1,
           }}
         />
-
         {/* Vignettes */}
         <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 38%, rgba(0,0,0,0.1) 68%, transparent 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.65) 32%, transparent 62%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 18%)" }} />
-        {/* Ambient color tint */}
         <div style={{
           position: "absolute", inset: 0, zIndex: 3,
           background: `radial-gradient(ellipse at 12% 65%, ${c}16 0%, transparent 55%)`,
@@ -252,41 +247,78 @@ export default function Projects() {
         }} />
       </div>
 
-      {/* ── Foreground layout ── */}
+      {/* ── Foreground: left card column + right info panel ── */}
       <div style={{
         position: "relative", zIndex: 4,
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        padding: "clamp(20px,4vw,60px) clamp(24px,5vw,80px) 0 clamp(24px,5vw,80px)",
+        flexDirection: "row",
+        alignItems: "stretch",
+        padding: "clamp(20px,4vw,60px) clamp(24px,5vw,80px)",
         boxSizing: "border-box",
-        overflow: "visible",
+        gap: "clamp(16px,2vw,36px)",
       }}>
 
-        {/* ── Row 1: Heading ── */}
-        <h2 className="font-rockSalt" style={{
-          fontSize: "clamp(28px,5.5vw,72px)",
-          color: "#fff", lineHeight: 1, letterSpacing: "-0.01em",
-          margin: "0 0 clamp(12px,2.2vh,32px) 0",
+        {/* ── Left: vertical card strip ── */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          gap: "clamp(8px,1.2vh,16px)",
           flexShrink: 0,
+          overflowY: "auto",
+          overflowX: "visible",
+          scrollbarWidth: "none",
+          paddingLeft: 4,
+          paddingRight: 8,
         }}>
-          Projects
-        </h2>
+          {PROJECTS.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isActive={index === activeIndex}
+              index={index}
+              activeIndex={activeIndex}
+              isTransitioning={isTransitioning}
+              onProjectChange={handleCardClick}
+            />
+          ))}
+        </div>
 
-        {/* ── Row 2: Info panel ── */}
+        {/* Vertical separator */}
+        <div style={{
+          width: 1,
+          alignSelf: "stretch",
+          flexShrink: 0,
+          background: `linear-gradient(to bottom, transparent 0%, ${c}60 30%, ${c}20 70%, transparent 100%)`,
+          transition: "background 0.5s",
+        }} />
+
+        {/* ── Right: info panel ── */}
         <div style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          minHeight: 0,
-          overflow: "visible",
+          justifyContent: "center",
+          minWidth: 0,
           opacity: isTransitioning ? 0 : 1,
           transform: isTransitioning ? "translateY(15px)" : "translateY(0)",
           transition: "opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           willChange: isTransitioning ? "opacity, transform" : "auto",
         }}>
 
-          {/* Meta pill: category · year */}
+          {/* Heading */}
+          <h2 className="font-rockSalt" style={{
+            fontSize: "clamp(28px,5.5vw,72px)",
+            color: "#fff", lineHeight: 1, letterSpacing: "-0.01em",
+            margin: "0 0 clamp(16px,2.5vh,36px) 0",
+            flexShrink: 0,
+          }}>
+            Projects
+          </h2>
+
+          {/* Meta pill */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "clamp(6px,1vh,14px)", flexShrink: 0 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.4s", flexShrink: 0 }} />
             <p style={{
@@ -329,17 +361,17 @@ export default function Projects() {
           {/* Description */}
           <p style={{
             fontSize: "clamp(11px,1.05vw,15px)", color: "rgba(255,255,255,0.65)",
-            lineHeight: 1.75, maxWidth: "86ch",
+            lineHeight: 1.75, maxWidth: "60ch",
             margin: "0 0 clamp(10px,1.4vh,20px) 0",
             flexShrink: 0,
-            display: "-webkit-box", WebkitLineClamp: 2,
+            display: "-webkit-box", WebkitLineClamp: 3,
             WebkitBoxOrient: "vertical", overflow: "hidden",
           }}>
             {activeProject.description}
           </p>
 
           {/* Tags */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(5px,0.5vw,8px)", flexShrink: 0 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(5px,0.5vw,8px)", flexShrink: 0, marginBottom: "clamp(16px,2.5vh,36px)" }}>
             {activeProject.tags.map((tag) => (
               <span key={tag} style={{
                 fontSize: "clamp(9px,0.8vw,11px)", fontWeight: 500,
@@ -353,50 +385,9 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* Spacer */}
-          <div style={{ flex: 1, minHeight: "clamp(16px,3vh,48px)" }} />
-
-          {/* Button wrapper */}
-          <div style={{
-            flexShrink: 0,
-            overflow: "visible",
-            paddingBottom: "clamp(12px,2vh,28px)",
-          }}>
+          {/* Button */}
+          <div style={{ flexShrink: 0, overflow: "visible" }}>
             <ViewWorkButton project={activeProject} key={activeProject.id} />
-          </div>
-        </div>
-
-        {/* ── Row 3: Card strip ── */}
-        <div style={{ flexShrink: 0, overflow: "visible" }}>
-          {/* Separator */}
-          <div style={{
-            height: 1,
-            background: `linear-gradient(to right, ${c}70, ${c}18 60%, transparent)`,
-            transition: "background 0.5s",
-            marginBottom: "clamp(8px,1.2vh,18px)",
-          }} />
-
-          <style>{`#ps::-webkit-scrollbar{display:none}`}</style>
-          <div id="ps" style={{
-            display: "flex",
-            gap: "clamp(5px,0.65vw,12px)",
-            alignItems: "flex-end",
-            overflowX: "visible", overflowY: "visible",
-            scrollbarWidth: "none",
-            paddingTop: 18,
-            paddingBottom: "clamp(18px,3vh,36px)",
-          }}>
-            {PROJECTS.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                isActive={index === activeIndex}
-                index={index}
-                activeIndex={activeIndex}
-                isTransitioning={isTransitioning}
-                onProjectChange={handleCardClick}
-              />
-            ))}
           </div>
         </div>
       </div>
