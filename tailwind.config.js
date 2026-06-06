@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
         protest: ["Protest Revolution", "system-ui", "sans-serif"],
         cabin: ["Cabin Sketch", "system-ui", "sans-serif"],
         rockSalt: ["Rock Salt", "system-ui", "sans-serif"],

@@ -55,8 +55,8 @@ const ImagePreloader = ({ onLoadComplete }) => {
             setDisplay(false);
             displayRef.current = false;
             onLoadComplete();
-          }, 1200);
-        }, 600);
+          }, 600);
+        }, 200);
         return;
       }
 
@@ -100,7 +100,7 @@ const ImagePreloader = ({ onLoadComplete }) => {
         overflow: 'hidden',
         color: '#fff',
         transform:  exit ? 'translateY(-100vh)' : 'translateY(0)',
-        transition: exit ? 'transform 1.2s cubic-bezier(0.76, 0, 0.24, 1)' : 'none',
+        transition: exit ? 'transform 0.6s cubic-bezier(0.76, 0, 0.24, 1)' : 'none',
         borderBottomLeftRadius:  exit ? '10%' : '0%',
         borderBottomRightRadius: exit ? '10%' : '0%',
       }}

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Protest+Revolution&family=Rock+Salt&family=Sawarabi+Gothic&display=swap");
+/* Fonts loaded via index.html <link> tag — no @import needed */
 
 @tailwind base;
 @tailwind components;
@@ -37,7 +37,7 @@ html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: white;
   }
 

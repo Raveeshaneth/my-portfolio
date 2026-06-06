@@ -28,7 +28,7 @@ export function setupPanelScroll() {
   // Slide About → Projects
   tl.to(panels[2], { yPercent: 0, duration: 1 });
 
-  const TOTAL_PROJECTS = 8; // must match PROJECTS.length in Projects.jsx
+  const TOTAL_PROJECTS = 5; // must match PROJECTS.length in Projects.jsx
 
   // Steps: 1 (hero→about) + 1 (about→projects) + 8 (one step per project) = 10
   // This gives each project its own dedicated snap point

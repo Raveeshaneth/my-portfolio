@@ -73,15 +73,15 @@ const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTrans
 
   return (
     <div
+      data-cursor="view"
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        width: "clamp(52px, 6vw, 88px)",
+        width: "clamp(48px, 5vw, 72px)",
         flexShrink: 0,
         cursor: "pointer",
-        /* active card nudges right instead of up */
-        transform: isActive ? "translateX(8px)" : "translateX(0)",
+        transform: isActive ? "translateX(6px) scale(1.08)" : hovered ? "translateX(3px)" : "translateX(0)",
         transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
       }}
     >
@@ -90,10 +90,11 @@ const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTrans
         aspectRatio: "3/4",
         borderRadius: 10,
         overflow: "hidden",
-        opacity: isActive ? 1 : hovered ? 0.8 : 0.38,
+        opacity: isActive ? 1 : hovered ? 0.85 : 0.4,
         filter: isActive ? "none" : hovered ? "brightness(1.25)" : "grayscale(60%) brightness(0.6)",
-        transition: "opacity 0.3s ease, filter 0.3s ease, outline-color 0.3s ease",
+        transition: "opacity 0.3s ease, filter 0.3s ease, outline-color 0.3s ease, box-shadow 0.3s ease",
         outline: isActive ? `1.5px solid ${project.color}` : "1.5px solid transparent",
+        boxShadow: isActive ? `0 0 20px ${project.color}30` : "none",
         contain: "layout style paint",
       }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a1a,#000)" }} />
@@ -101,11 +102,11 @@ const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTrans
           <img src={project.icon} alt="" style={{ width: "32%", height: "32%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.9 : 0.4 }} loading="eager" decoding="async" />
         </div>
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)` }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "6px 6px 5px" }}>
-          <p style={{ fontSize: "clamp(7px,1vw,10px)", fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "5px 5px 4px" }}>
+          <p style={{ fontSize: "clamp(7px,0.85vw,9px)", fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {project.title}
           </p>
-          <p style={{ fontSize: "clamp(6px,0.8vw,8px)", color: "rgba(255,255,255,0.55)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <p style={{ fontSize: "clamp(5px,0.65vw,7px)", color: "rgba(255,255,255,0.55)", margin: "1px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {project.subtitle}
           </p>
         </div>
@@ -122,40 +123,38 @@ const ViewWorkButton = React.memo(({ project }) => {
   if (!project.isFigma) return null;
 
   return (
-    <div style={{ overflow: "visible", display: "inline-block", padding: 16, margin: -16 }}>
-      <a
-        href={project.figmaUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 9,
-          padding: "11px 24px",
-          borderRadius: 100,
-          background: project.color,
-          color: "#fff",
-          fontSize: "clamp(11px,1vw,13px)",
-          fontWeight: 600,
-          textDecoration: "none",
-          letterSpacing: "0.03em",
-          whiteSpace: "nowrap",
-          boxShadow: "none",
-          transform: hovered ? "scale(1.08)" : "scale(1)",
-          transformOrigin: "center center",
-          transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1)",
-          willChange: "transform",
-        }}
-      >
-        <img src={figmaIcon} alt="" style={{ width: 13, height: 13, filter: "invert(1)", flexShrink: 0, objectFit: "contain" }} />
-        View Work
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M7 17L17 7M17 7H7M17 7V17" />
-        </svg>
-      </a>
-    </div>
+    <a
+      href={project.figmaUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 9,
+        padding: "11px 24px",
+        borderRadius: 100,
+        background: project.color,
+        color: "#fff",
+        fontSize: "clamp(11px,1vw,13px)",
+        fontWeight: 600,
+        textDecoration: "none",
+        letterSpacing: "0.03em",
+        whiteSpace: "nowrap",
+        boxShadow: hovered ? `0 4px 24px ${project.color}50` : "none",
+        transform: hovered ? "scale(1.06)" : "scale(1)",
+        transformOrigin: "center center",
+        transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease",
+        willChange: "transform",
+      }}
+    >
+      <img src={figmaIcon} alt="" style={{ width: 13, height: 13, filter: "invert(1)", flexShrink: 0, objectFit: "contain" }} />
+      View Work
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+        <path d="M7 17L17 7M17 7H7M17 7V17" />
+      </svg>
+    </a>
   );
 });
 
@@ -222,7 +221,6 @@ export default function Projects() {
               opacity: 0,
               transition: "opacity 0.6s ease-out",
               zIndex: 0,
-              willChange: "opacity",
             }}
           />
         )}
@@ -247,16 +245,16 @@ export default function Projects() {
         }} />
       </div>
 
-      {/* ── Foreground: left card column + right info panel ── */}
+      {/* ── Foreground ── */}
       <div style={{
         position: "relative", zIndex: 4,
         height: "100%",
         display: "flex",
         flexDirection: "row",
-        alignItems: "stretch",
-        padding: "clamp(20px,4vw,60px) clamp(24px,5vw,80px)",
+        alignItems: "center",
+        padding: "clamp(16px,3vh,40px) clamp(20px,4vw,64px)",
         boxSizing: "border-box",
-        gap: "clamp(16px,2vw,36px)",
+        gap: "clamp(14px,1.8vw,28px)",
       }}>
 
         {/* ── Left: vertical card strip ── */}
@@ -265,13 +263,9 @@ export default function Projects() {
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "center",
-          gap: "clamp(8px,1.2vh,16px)",
+          gap: "clamp(6px,0.9vh,12px)",
           flexShrink: 0,
-          overflowY: "auto",
-          overflowX: "visible",
-          scrollbarWidth: "none",
-          paddingLeft: 4,
-          paddingRight: 8,
+          padding: "8px 12px 8px 4px",
         }}>
           {PROJECTS.map((project, index) => (
             <ProjectCard
@@ -289,9 +283,10 @@ export default function Projects() {
         {/* Vertical separator */}
         <div style={{
           width: 1,
-          alignSelf: "stretch",
+          alignSelf: "center",
+          height: "60%",
           flexShrink: 0,
-          background: `linear-gradient(to bottom, transparent 0%, ${c}60 30%, ${c}20 70%, transparent 100%)`,
+          background: `linear-gradient(to bottom, transparent 0%, ${c}50 30%, ${c}18 70%, transparent 100%)`,
           transition: "background 0.5s",
         }} />
 
@@ -303,23 +298,23 @@ export default function Projects() {
           justifyContent: "center",
           minWidth: 0,
           opacity: isTransitioning ? 0 : 1,
-          transform: isTransitioning ? "translateY(15px)" : "translateY(0)",
+          transform: isTransitioning ? "translateY(12px)" : "translateY(0)",
           transition: "opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           willChange: isTransitioning ? "opacity, transform" : "auto",
         }}>
 
           {/* Heading */}
           <h2 className="font-rockSalt" style={{
-            fontSize: "clamp(28px,5.5vw,72px)",
+            fontSize: "clamp(24px,4.5vw,60px)",
             color: "#fff", lineHeight: 1, letterSpacing: "-0.01em",
-            margin: "0 0 clamp(16px,2.5vh,36px) 0",
+            margin: "0 0 clamp(12px,2vh,28px) 0",
             flexShrink: 0,
           }}>
             Projects
           </h2>
 
           {/* Meta pill */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "clamp(6px,1vh,14px)", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "clamp(4px,0.8vh,10px)", flexShrink: 0 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.4s", flexShrink: 0 }} />
             <p style={{
               fontSize: "clamp(9px,0.85vw,11px)", fontWeight: 600,
@@ -332,20 +327,20 @@ export default function Projects() {
 
           {/* Title */}
           <h3 style={{
-            fontSize: "clamp(26px,4.2vw,64px)", fontWeight: 200,
+            fontSize: "clamp(24px,3.8vw,56px)", fontWeight: 200,
             color: "#fff", lineHeight: 1.05,
-            margin: "0 0 clamp(2px,0.4vh,8px) 0",
+            margin: "0 0 clamp(2px,0.3vh,6px) 0",
             flexShrink: 0,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-            maxWidth: "55vw",
+            maxWidth: "50vw",
           }}>
             {activeProject.title}
           </h3>
 
           {/* Subtitle */}
           <p style={{
-            fontSize: "clamp(11px,1.2vw,16px)", color: "rgba(255,255,255,0.5)",
-            letterSpacing: "0.08em", margin: "0 0 clamp(8px,1.2vh,18px) 0",
+            fontSize: "clamp(11px,1.1vw,15px)", color: "rgba(255,255,255,0.5)",
+            letterSpacing: "0.08em", margin: "0 0 clamp(6px,1vh,14px) 0",
             flexShrink: 0,
           }}>
             {activeProject.subtitle}
@@ -353,29 +348,29 @@ export default function Projects() {
 
           {/* Accent line */}
           <div style={{
-            width: "clamp(36px,3.5vw,52px)", height: 2, borderRadius: 2,
+            width: "clamp(30px,3vw,44px)", height: 2, borderRadius: 2,
             background: c, transition: "background 0.5s",
-            marginBottom: "clamp(8px,1.2vh,18px)", flexShrink: 0,
+            marginBottom: "clamp(6px,1vh,14px)", flexShrink: 0,
           }} />
 
           {/* Description */}
           <p style={{
-            fontSize: "clamp(11px,1.05vw,15px)", color: "rgba(255,255,255,0.65)",
-            lineHeight: 1.75, maxWidth: "60ch",
-            margin: "0 0 clamp(10px,1.4vh,20px) 0",
+            fontSize: "clamp(11px,1vw,14px)", color: "rgba(255,255,255,0.6)",
+            lineHeight: 1.7, maxWidth: "55ch",
+            margin: "0 0 clamp(8px,1.2vh,16px) 0",
             flexShrink: 0,
-            display: "-webkit-box", WebkitLineClamp: 3,
+            display: "-webkit-box", WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical", overflow: "hidden",
           }}>
             {activeProject.description}
           </p>
 
           {/* Tags */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(5px,0.5vw,8px)", flexShrink: 0, marginBottom: "clamp(16px,2.5vh,36px)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(4px,0.4vw,7px)", flexShrink: 0, marginBottom: "clamp(12px,2vh,28px)" }}>
             {activeProject.tags.map((tag) => (
               <span key={tag} style={{
-                fontSize: "clamp(9px,0.8vw,11px)", fontWeight: 500,
-                padding: "4px clamp(10px,1vw,14px)", borderRadius: 100,
+                fontSize: "clamp(9px,0.75vw,11px)", fontWeight: 500,
+                padding: "3px clamp(8px,0.8vw,12px)", borderRadius: 100,
                 border: `1px solid ${c}40`, color: c, background: `${c}12`,
                 whiteSpace: "nowrap", letterSpacing: "0.03em",
                 transition: "border-color 0.4s, color 0.4s, background 0.4s",
@@ -386,7 +381,7 @@ export default function Projects() {
           </div>
 
           {/* Button */}
-          <div style={{ flexShrink: 0, overflow: "visible" }}>
+          <div style={{ flexShrink: 0 }}>
             <ViewWorkButton project={activeProject} key={activeProject.id} />
           </div>
         </div>

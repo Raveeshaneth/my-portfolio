@@ -63,6 +63,20 @@ const PROJECTS = [
   },
 ];
 
+/* ── Preload an image and return a promise ── */
+const imageCache = new Map();
+function preloadImage(src) {
+  if (imageCache.has(src)) return imageCache.get(src);
+  const p = new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(src);
+    img.onerror = () => resolve(src);
+    img.src = src;
+  });
+  imageCache.set(src, p);
+  return p;
+}
+
 /* ─── Thumbnail grid card ─── */
 const ProjectCard = React.memo(({ project, isActive, onClick }) => (
   <div
@@ -75,11 +89,10 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
       aspectRatio: "3/4",
       outline: isActive ? `2px solid ${project.color}` : "2px solid transparent",
       outlineOffset: 2,
-      transition: "outline-color 0.2s, transform 0.2s ease-out",
+      transition: "outline-color 0.15s, transform 0.15s ease-out",
       transform: isActive ? "scale(1.06)" : "scale(1)",
       flexShrink: 0,
       WebkitTapHighlightColor: "transparent",
-      /* Gradient background — no photo needed at this tiny card size */
       background: isActive
         ? `linear-gradient(145deg, ${project.color}55 0%, #111 60%, #000 100%)`
         : `linear-gradient(145deg, ${project.color}22 0%, #111 70%, #000 100%)`,
@@ -87,18 +100,18 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
     }}
   >
     {/* Radial accent glow when active */}
-    <div style={{
-      position: "absolute", inset: 0,
-      background: isActive
-        ? `radial-gradient(ellipse at 50% 15%, ${project.color}50 0%, transparent 65%)`
-        : "none",
-    }} />
+    {isActive && (
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `radial-gradient(ellipse at 50% 15%, ${project.color}50 0%, transparent 65%)`,
+      }} />
+    )}
 
-    {/* Icon — more prominent without photo noise */}
+    {/* Icon */}
     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img
         src={project.icon} alt=""
-        style={{ width: "34%", height: "34%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 1 : 0.45, transition: "opacity 0.2s ease-out" }}
+        style={{ width: "34%", height: "34%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 1 : 0.45, transition: "opacity 0.15s ease-out" }}
         loading="lazy" decoding="async"
       />
     </div>
@@ -108,7 +121,7 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
       position: "absolute", inset: 0,
       background: `linear-gradient(to top, ${project.color}bb 0%, transparent 60%)`,
       opacity: isActive ? 1 : 0.55,
-      transition: "opacity 0.2s ease-out",
+      transition: "opacity 0.15s ease-out",
     }} />
 
     {/* Active top line */}
@@ -130,7 +143,6 @@ ProjectCard.displayName = "ProjectCard";
 /* ─── Full-screen detail modal ─── */
 const ProjectModal = React.memo(({ project, onClose }) => {
   const c = project.color;
-  const [btnHovered, setBtnHovered] = useState(false);
 
   return (
     <div
@@ -139,7 +151,6 @@ const ProjectModal = React.memo(({ project, onClose }) => {
         position: "fixed", inset: 0, zIndex: 100,
         background: "rgba(0,0,0,0.88)",
         display: "flex", alignItems: "flex-end",
-        /* Use a simple semi-transparent bg instead of expensive backdrop-filter */
       }}
     >
       <div
@@ -174,6 +185,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
         {/* Close button */}
         <button
           onClick={onClose}
+          aria-label="Close project details"
           style={{
             position: "absolute", top: 16, right: 16, zIndex: 3,
             width: 32, height: 32, borderRadius: "50%",
@@ -181,7 +193,6 @@ const ProjectModal = React.memo(({ project, onClose }) => {
             border: "1px solid rgba(255,255,255,0.15)",
             color: "#fff", fontSize: 14, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "background 0.2s",
           }}
         >
           ✕
@@ -242,40 +253,32 @@ const ProjectModal = React.memo(({ project, onClose }) => {
 
             {/* View Work button */}
             {project.isFigma && (
-              <div style={{ overflow: "visible", display: "inline-block", padding: 14, margin: -14 }}>
-                <a
-                  href={project.figmaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onMouseEnter={() => setBtnHovered(true)}
-                  onMouseLeave={() => setBtnHovered(false)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 9,
-                    padding: "12px 26px",
-                    borderRadius: 100,
-                    background: c,
-                    color: "#fff",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    letterSpacing: "0.03em",
-                    whiteSpace: "nowrap",
-                    boxShadow: "none",
-                    transform: btnHovered ? "scale(1.06)" : "scale(1)",
-                    transformOrigin: "center center",
-                    transition: "transform 0.2s ease-out",
-                    willChange: "transform",
-                  }}
-                >
-                  <img src={figmaIcon} alt="" style={{ width: 14, height: 14, filter: "invert(1)", flexShrink: 0, objectFit: "contain" }} />
-                  View Work
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <path d="M7 17L17 7M17 7H7M17 7V17" />
-                  </svg>
-                </a>
-              </div>
+              <a
+                href={project.figmaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 9,
+                  padding: "12px 26px",
+                  borderRadius: 100,
+                  background: c,
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  letterSpacing: "0.03em",
+                  whiteSpace: "nowrap",
+                  WebkitTapHighlightColor: "transparent",
+                }}
+              >
+                <img src={figmaIcon} alt="" style={{ width: 14, height: 14, filter: "invert(1)", flexShrink: 0, objectFit: "contain" }} />
+                View Work
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </a>
             )}
           </div>
         </div>
@@ -289,10 +292,11 @@ ProjectModal.displayName = "ProjectModal";
 /* ─── Main mobile component ─── */
 export default function ProjectsMobile() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(-1);
   const [selectedProject, setSelectedProject] = useState(null);
   const sectionRef = useRef(null);
 
-  /* Defer ALL image network requests until section is near the viewport */
+  /* Defer image loading until section is near viewport */
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = sectionRef.current;
@@ -300,11 +304,21 @@ export default function ProjectsMobile() {
     if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
-      { rootMargin: "200px" }   // load just before visible — don't compete with hero bandwidth
+      { rootMargin: "300px" }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  /* Preload adjacent images for instant switching */
+  useEffect(() => {
+    if (!inView) return;
+    // Preload current
+    preloadImage(PROJECTS[activeIndex].image);
+    // Preload neighbors
+    if (activeIndex > 0) preloadImage(PROJECTS[activeIndex - 1].image);
+    if (activeIndex < PROJECTS.length - 1) preloadImage(PROJECTS[activeIndex + 1].image);
+  }, [activeIndex, inView]);
 
   const activeProject = useMemo(() => PROJECTS[activeIndex], [activeIndex]);
   const c = activeProject.color;
@@ -313,7 +327,10 @@ export default function ProjectsMobile() {
     if (index === activeIndex) {
       setSelectedProject(PROJECTS[index]);
     } else {
+      setPrevIndex(activeIndex);
       setActiveIndex(index);
+      // Clear previous after crossfade completes
+      setTimeout(() => setPrevIndex(-1), 250);
     }
   }, [activeIndex]);
 
@@ -340,41 +357,53 @@ export default function ProjectsMobile() {
           contain: "layout style paint",
         }}
       >
-        {/* ── Background – only 2 layers: current + previous ── */}
+        {/* ── Background – ONLY current + previous (2 images max) ── */}
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          {inView && PROJECTS.map((project, index) => (
-            /*
-             * Render ALL background images as <img> tags (not CSS backgroundImage).
-             * This lets the browser use loading/decoding/fetchpriority attributes.
-             * Only the active one is visible (opacity:1); others are opacity:0 but
-             * already decoded and GPU-composited, so switching is instant.
-             */
-            <img
-              key={project.id}
-              src={project.image}
-              alt=""
-              loading={index === 0 ? "eager" : "lazy"}
-              decoding={index === 0 ? "sync" : "async"}
-              fetchPriority={index === 0 ? "high" : "low"}
-              style={{
-                position: "absolute", inset: 0,
-                width: "100%", height: "100%",
-                objectFit: "cover", objectPosition: "center",
-                opacity: index === activeIndex ? 1 : 0,
-                transition: "opacity 0.2s ease-out",
-                zIndex: 0,
-                willChange: index === activeIndex ? "opacity" : "auto",
-              }}
-            />
-          ))}
-          {/* Vignettes — heavier on mobile for readability */}
+          {inView && (
+            <>
+              {/* Previous image — fading out */}
+              {prevIndex >= 0 && (
+                <img
+                  key={`bg-prev-${prevIndex}`}
+                  src={PROJECTS[prevIndex].image}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                  style={{
+                    position: "absolute", inset: 0,
+                    width: "100%", height: "100%",
+                    objectFit: "cover", objectPosition: "center",
+                    opacity: 0,
+                    transition: "opacity 0.2s ease-out",
+                    zIndex: 0,
+                  }}
+                />
+              )}
+              {/* Current image — visible */}
+              <img
+                key={`bg-curr-${activeIndex}`}
+                src={PROJECTS[activeIndex].image}
+                alt=""
+                loading="eager"
+                decoding="async"
+                style={{
+                  position: "absolute", inset: 0,
+                  width: "100%", height: "100%",
+                  objectFit: "cover", objectPosition: "center",
+                  opacity: 1,
+                  zIndex: 1,
+                }}
+              />
+            </>
+          )}
+          {/* Vignettes */}
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.85) 80%, rgba(0,0,0,0.99) 100%)" }} />
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 70%)" }} />
           {/* Ambient color tint */}
           <div style={{
             position: "absolute", inset: 0, zIndex: 3,
             background: `radial-gradient(ellipse at 20% 70%, ${c}20 0%, transparent 60%)`,
-            transition: "background 0.3s ease-out",
+            transition: "background 0.2s ease-out",
           }} />
         </div>
 
@@ -399,15 +428,15 @@ export default function ProjectsMobile() {
             Projects
           </h2>
 
-          {/* ── Info panel — fills remaining space ── */}
+          {/* ── Info panel ── */}
           <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "visible", minHeight: 0 }}>
 
             {/* Meta */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10, flexShrink: 0 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.25s ease-out", flexShrink: 0 }} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: c, transition: "background 0.2s ease-out", flexShrink: 0 }} />
               <p style={{
                 fontSize: 10, fontWeight: 600, letterSpacing: "0.28em",
-                textTransform: "uppercase", color: c, margin: 0, transition: "color 0.25s ease-out",
+                textTransform: "uppercase", color: c, margin: 0, transition: "color 0.2s ease-out",
               }}>
                 {activeProject.category}&nbsp;&nbsp;·&nbsp;&nbsp;{activeProject.year}
               </p>
@@ -434,11 +463,11 @@ export default function ProjectsMobile() {
             {/* Accent line */}
             <div style={{
               width: 40, height: 2, borderRadius: 2,
-              background: c, transition: "background 0.25s ease-out",
+              background: c, transition: "background 0.2s ease-out",
               marginBottom: 14, flexShrink: 0,
             }} />
 
-            {/* Description — 2 lines on mobile */}
+            {/* Description */}
             <p style={{
               fontSize: 13, color: "rgba(255,255,255,0.65)",
               lineHeight: 1.7, margin: "0 0 14px 0", flexShrink: 0,
@@ -456,7 +485,7 @@ export default function ProjectsMobile() {
                   padding: "4px 11px", borderRadius: 100,
                   border: `1px solid ${c}40`, color: c, background: `${c}12`,
                   whiteSpace: "nowrap", letterSpacing: "0.03em",
-                  transition: "border-color 0.25s ease-out, color 0.25s ease-out, background 0.25s ease-out",
+                  transition: "border-color 0.2s ease-out, color 0.2s ease-out, background 0.2s ease-out",
                 }}>
                   {tag}
                 </span>
@@ -466,7 +495,7 @@ export default function ProjectsMobile() {
             {/* Spacer */}
             <div style={{ flex: 1, minHeight: 16 }} />
 
-            {/* "Tap to view" hint — shows when active project has figma link */}
+            {/* View Work button */}
             {activeProject.isFigma && (
               <div style={{ flexShrink: 0, marginBottom: 6, overflow: "visible" }}>
                 <a
@@ -492,7 +521,7 @@ export default function ProjectsMobile() {
               </div>
             )}
 
-            {/* Tap hint for non-figma projects */}
+            {/* Tap hint */}
             <p style={{
               fontSize: 10, color: "rgba(255,255,255,0.3)",
               margin: "0 0 clamp(10px,2vh,20px) 0",
@@ -508,7 +537,7 @@ export default function ProjectsMobile() {
             <div style={{
               height: 1,
               background: `linear-gradient(to right, transparent, ${c}70 20%, ${c}18 80%, transparent)`,
-              transition: "background 0.25s ease-out",
+              transition: "background 0.2s ease-out",
               marginBottom: 12,
             }} />
 
@@ -529,11 +558,10 @@ export default function ProjectsMobile() {
                     project={project}
                     isActive={index === activeIndex}
                     onClick={() => handleCardClick(index)}
-                    eager={index === 0}
                   />
                 </div>
               ))}
-              {/* Scroll-hint fade on the right edge */}
+              {/* Scroll-hint fade */}
               <div style={{
                 flexShrink: 0, width: 32, alignSelf: "stretch",
                 background: "linear-gradient(to right, transparent, rgba(0,0,0,0.6))",
