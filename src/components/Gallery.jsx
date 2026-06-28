@@ -206,10 +206,14 @@ const GridCard = ({ shot, index, vis, onOpen }) => {
 };
 
 /* ── Lightbox Modal ── */
-const Lightbox = ({ shot, onClose }) => {
+const Lightbox = ({ shot, onClose, onNavigate }) => {
+  const [swipe, setSwipe] = useState({ startX: 0, startY: 0, currentX: 0, currentY: 0, isSwiping: false });
+
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") onNavigate(1);
+      if (e.key === "ArrowLeft") onNavigate(-1);
     };
     window.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
@@ -217,12 +221,68 @@ const Lightbox = ({ shot, onClose }) => {
       window.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [onClose, onNavigate]);
+
+  const handleTouchStart = (e) => {
+    setSwipe({
+      startX: e.targetTouches[0].clientX,
+      startY: e.targetTouches[0].clientY,
+      currentX: e.targetTouches[0].clientX,
+      currentY: e.targetTouches[0].clientY,
+      isSwiping: true,
+    });
+  };
+
+  const handleTouchMove = (e) => {
+    if (!swipe.isSwiping) return;
+    // Prevent default scrolling when swiping inside the modal
+    if (e.cancelable) e.preventDefault();
+    setSwipe(prev => ({
+      ...prev,
+      currentX: e.targetTouches[0].clientX,
+      currentY: e.targetTouches[0].clientY,
+    }));
+  };
+
+  const handleTouchEnd = () => {
+    if (!swipe.isSwiping) return;
+    
+    const deltaX = swipe.currentX - swipe.startX;
+    const deltaY = swipe.currentY - swipe.startY;
+    
+    // Swipe down to close (threshold 60px)
+    if (deltaY > 60 && Math.abs(deltaY) > Math.abs(deltaX)) {
+      onClose();
+    }
+    // Swipe left/right to navigate (threshold 50px)
+    else if (deltaX > 50) {
+      onNavigate(-1); // swipe right -> previous
+    } else if (deltaX < -50) {
+      onNavigate(1); // swipe left -> next
+    }
+    
+    setSwipe({ startX: 0, startY: 0, currentX: 0, currentY: 0, isSwiping: false });
+  };
+
+  const deltaX = swipe.isSwiping ? swipe.currentX - swipe.startX : 0;
+  const deltaY = swipe.isSwiping ? swipe.currentY - swipe.startY : 0;
+  
+  // Only allow downward drag visual if vertical swipe
+  const visualDeltaY = deltaY > 0 ? deltaY : 0;
+  
+  const transformStyle = swipe.isSwiping 
+    ? `translate(${deltaX}px, ${visualDeltaY}px) rotate(${deltaX * 0.05}deg)`
+    : "translate(0px, 0px) rotate(0deg)";
+    
+  const transitionStyle = swipe.isSwiping ? "none" : "transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2)";
 
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <button
         onClick={onClose}
@@ -235,16 +295,20 @@ const Lightbox = ({ shot, onClose }) => {
       </button>
 
       <div
-        className="relative max-w-[90vw] max-h-[85vh] rounded-2xl overflow-hidden"
+        className="relative max-w-[90vw] max-h-[90vh] flex flex-col rounded-2xl overflow-hidden bg-[#0a0a0a]"
         onClick={(e) => e.stopPropagation()}
-        style={{ boxShadow: `0 24px 80px rgba(0,0,0,0.6), 0 0 60px ${shot.color}15` }}
+        style={{ 
+          boxShadow: `0 24px 80px rgba(0,0,0,0.6), 0 0 60px ${shot.color}15`,
+          transform: transformStyle,
+          transition: transitionStyle,
+          willChange: "transform"
+        }}
       >
-        <img src={shot.image} alt={shot.title} className="w-full h-full object-contain" style={{ maxHeight: "85vh" }} />
+        <div className="flex-1 min-h-0 flex items-center justify-center p-2 md:p-4 bg-black/40">
+          <img src={shot.image} alt={shot.title} className="w-full h-full object-contain" style={{ maxHeight: "70vh" }} />
+        </div>
 
-        <div
-          className="absolute bottom-0 left-0 right-0 p-4 lg:p-6"
-          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)" }}
-        >
+        <div className="shrink-0 p-4 lg:p-6 border-t border-white/5">
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-2 h-2 rounded-full" style={{ background: shot.color }} />
             <span className="text-[10px] lg:text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: shot.color }}>
@@ -254,7 +318,6 @@ const Lightbox = ({ shot, onClose }) => {
           <h3 className="text-[18px] lg:text-[24px] font-light text-white mb-1 leading-tight">{shot.title}</h3>
           <p className="text-[12px] lg:text-[14px] text-white/65 max-w-[60ch] leading-relaxed">{shot.description}</p>
         </div>
-
         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(to right, transparent, ${shot.color}, transparent)` }} />
       </div>
     </div>
@@ -304,7 +367,7 @@ export default function Gallery() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30" />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col h-screen px-4 md:px-6 lg:px-10 xl:px-14 py-5 lg:py-6">
+        <div className="relative z-10 flex flex-col min-h-[100dvh] lg:min-h-0 lg:h-screen px-4 md:px-6 lg:px-10 xl:px-14 py-5 lg:py-6">
           {/* Header row */}
           <div
             className="shrink-0 w-full max-w-[1600px] mx-auto mb-3 lg:mb-4"
@@ -385,7 +448,19 @@ export default function Gallery() {
         </div>
       </section>
 
-      {lightboxShot && <Lightbox shot={lightboxShot} onClose={() => setLightboxShot(null)} />}
+      {lightboxShot && (
+        <Lightbox 
+          shot={lightboxShot} 
+          onClose={() => setLightboxShot(null)} 
+          onNavigate={(direction) => {
+            const currentIndex = SHOTS.findIndex((s) => s.id === lightboxShot.id);
+            let nextIndex = currentIndex + direction;
+            if (nextIndex < 0) nextIndex = SHOTS.length - 1;
+            if (nextIndex >= SHOTS.length) nextIndex = 0;
+            setLightboxShot(SHOTS[nextIndex]);
+          }}
+        />
+      )}
     </>
   );
 }

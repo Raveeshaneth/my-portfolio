@@ -3,6 +3,7 @@ import logo from "../assets/logo.png";
 
 export default function Navbar() {
   const [visible, setVisible]       = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const lastY    = useRef(0);
   const isMobile = useRef(typeof window !== "undefined" && window.innerWidth < 1024);
@@ -108,7 +109,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav
+    <>
+      <nav
       className={`
         fixed top-0 left-0 w-full z-50
         h-[60px]
@@ -135,8 +137,21 @@ export default function Navbar() {
         />
       </button>
 
-      {/* Nav links with active indicator */}
-      <div className="flex gap-6 md:gap-8">
+      {/* Hamburger Button (Mobile) */}
+      <button 
+        className="md:hidden p-2 -mr-2 text-black/80 hover:text-black cursor-pointer z-50 relative"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <div className="w-6 h-[18px] flex flex-col justify-between">
+          <span className={`w-full h-0.5 bg-current rounded transform transition-all duration-300 origin-left ${isMenuOpen ? "rotate-45 translate-x-px -translate-y-px" : ""}`} />
+          <span className={`w-full h-0.5 bg-current rounded transition-all duration-300 ${isMenuOpen ? "opacity-0 translate-x-2" : ""}`} />
+          <span className={`w-full h-0.5 bg-current rounded transform transition-all duration-300 origin-left ${isMenuOpen ? "-rotate-45 translate-x-px translate-y-px" : ""}`} />
+        </div>
+      </button>
+
+      {/* Nav links (Desktop) */}
+      <div className="hidden md:flex gap-6 md:gap-8">
         {navItems.map((item) => {
           const isActive = activeSection === item.id;
           return (
@@ -166,6 +181,44 @@ export default function Navbar() {
           );
         })}
       </div>
-    </nav>
+      </nav>
+
+      {/* Sidebar Menu Overlay (Mobile) */}
+      <div className={`
+        fixed inset-0 bg-white/95 backdrop-blur-xl z-[100] md:hidden
+        transition-all duration-500 ease-out flex flex-col justify-center items-center gap-10
+        ${isMenuOpen ? "opacity-100 pointer-events-auto translate-x-0" : "opacity-0 pointer-events-none translate-x-full"}
+      `}>
+        {/* Close Button */}
+        <button 
+          className="absolute top-4 right-6 p-2 text-black/80 hover:text-black cursor-pointer"
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {navItems.map((item) => {
+          const isActive = activeSection === item.id;
+          return (
+            <button
+              key={`mobile-${item.id}`}
+              onClick={() => {
+                setIsMenuOpen(false);
+                scrollToSection(item.id);
+              }}
+              className={`
+                font-rockSalt text-3xl transition-all duration-300 cursor-pointer
+                ${isActive ? "text-[#3e2723] [-webkit-text-stroke:1px_#3e2723]" : "text-black/60 hover:text-black"}
+              `}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
