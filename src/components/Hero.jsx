@@ -72,19 +72,16 @@ export default function Hero() {
       </div>
 
       {/* content */}
-      <div className="relative w-full h-full flex items-center justify-center px-6 md:px-12 lg:px-20 py-20">
+      <div className="relative w-full h-full flex items-center justify-center px-6 md:px-12 lg:px-20 pt-24 pb-12 md:py-20">
         <div className="w-full max-w-[1600px]">
 
           {/* Mobile Layout: Column */}
-          <div className="lg:hidden flex flex-col items-center text-center space-y-4 pt-12 md:pt-16">
+          <div className="lg:hidden flex flex-col items-center text-center space-y-4 pt-4 md:pt-8">
             {/* Text First on Mobile */}
             <div className="space-y-3 z-10 w-full">
               {/* Available for Work Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-black/15 shadow-lg mb-3 will-change-auto">
-                <div className="relative">
-                  <div className="w-2 h-2 bg-green-800 rounded-full" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
-                  <div className="absolute inset-0 w-2 h-2 bg-green-600 rounded-full" style={{ animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite' }} />
-                </div>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-slow-blink" />
                 <p className="text-[10px] text-black/80 uppercase tracking-[0.2em] font-bold">
                   Available for Work
                 </p>
@@ -162,7 +159,7 @@ export default function Hero() {
               <div className="space-y-3">
                 {/* Available for Work Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-full border border-black/10 shadow-lg mb-4 will-change-auto">
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
+                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-slow-blink" />
                   <p className="text-[11px] text-black/75 uppercase tracking-[0.25em] font-bold">
                     Available for Work
                   </p>

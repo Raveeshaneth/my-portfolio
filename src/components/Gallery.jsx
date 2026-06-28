@@ -223,25 +223,30 @@ const Lightbox = ({ shot, onClose, onNavigate }) => {
     };
   }, [onClose, onNavigate]);
 
-  const handleTouchStart = (e) => {
+  const handleStart = (clientX, clientY) => {
     setSwipe({
-      startX: e.targetTouches[0].clientX,
-      startY: e.targetTouches[0].clientY,
-      currentX: e.targetTouches[0].clientX,
-      currentY: e.targetTouches[0].clientY,
+      startX: clientX,
+      startY: clientY,
+      currentX: clientX,
+      currentY: clientY,
       isSwiping: true,
     });
   };
 
-  const handleTouchMove = (e) => {
+  const handleMove = (clientX, clientY) => {
     if (!swipe.isSwiping) return;
-    // Prevent default scrolling when swiping inside the modal
-    if (e.cancelable) e.preventDefault();
     setSwipe(prev => ({
       ...prev,
-      currentX: e.targetTouches[0].clientX,
-      currentY: e.targetTouches[0].clientY,
+      currentX: clientX,
+      currentY: clientY,
     }));
+  };
+
+  const handleTouchStart = (e) => handleStart(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+  const handleTouchMove = (e) => {
+    if (!swipe.isSwiping) return;
+    if (e.cancelable) e.preventDefault();
+    handleMove(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
   };
 
   const handleTouchEnd = () => {
@@ -291,6 +296,27 @@ const Lightbox = ({ shot, onClose, onNavigate }) => {
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* Navigation Buttons (Desktop) */}
+      <button 
+        className="hidden lg:flex absolute left-8 xl:left-12 z-20 w-12 h-12 rounded-full bg-white/5 border border-white/10 items-center justify-center text-white/50 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all duration-200 cursor-pointer"
+        onClick={(e) => { e.stopPropagation(); onNavigate(-1); }}
+        aria-label="Previous image"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="-ml-1">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+
+      <button 
+        className="hidden lg:flex absolute right-8 xl:right-12 z-20 w-12 h-12 rounded-full bg-white/5 border border-white/10 items-center justify-center text-white/50 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all duration-200 cursor-pointer"
+        onClick={(e) => { e.stopPropagation(); onNavigate(1); }}
+        aria-label="Next image"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+          <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
 
