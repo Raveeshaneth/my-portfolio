@@ -92,7 +92,7 @@ export default function Hero() {
                 Hi, I'm <span className="bg-gradient-to-r from-[#6d4c41] to-[#8d6e63] bg-clip-text text-transparent">Raveesha</span>
               </p>
 
-              <h1 className="font-extrabold text-[40px] md:text-[60px] leading-[0.95] tracking-tighter px-4">
+              <h1 className="font-extrabold text-[50px] md:text-[60px] leading-[0.95] tracking-tighter px-4">
                 <span className="text-[#3e2723]">UI/UX</span>
                 <br />
                 <span className="bg-gradient-to-r from-[#6d4c41] via-[#8d6e63] to-[#a1887f] bg-clip-text text-transparent">Designer</span>
