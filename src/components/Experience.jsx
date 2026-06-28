@@ -54,7 +54,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="relative w-full h-full overflow-hidden bg-black"
+      className="relative w-full min-h-[100dvh] lg:min-h-0 lg:h-full overflow-hidden bg-black flex items-center justify-center"
     >
       {/* ═══════ SLEEK DARK GRID BACKGROUND ═══════ */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -80,8 +80,8 @@ export default function Experience() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
 
       {/* Content */}
-      <div className="absolute inset-0 flex items-center justify-center px-6 md:px-12 lg:px-16">
-        <div className="w-full max-w-[1100px]">
+      <div className="relative z-10 w-full px-6 md:px-12 lg:px-16 py-20 lg:py-0">
+        <div className="w-full max-w-[1100px] mx-auto">
           {/* Title */}
           <div
             className={`mb-8 lg:mb-10 transition-all duration-700 ${vis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"

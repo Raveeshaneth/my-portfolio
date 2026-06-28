@@ -72,11 +72,11 @@ export default function Hero() {
       </div>
 
       {/* content */}
-      <div className="relative w-full h-full flex items-center justify-center px-6 md:px-12 lg:px-20 pt-24 pb-12 md:py-20">
+      <div className="relative w-full h-full flex items-center justify-center px-6 md:px-12 lg:px-20 pt-16 pb-12 md:py-20">
         <div className="w-full max-w-[1600px]">
 
           {/* Mobile Layout: Column */}
-          <div className="lg:hidden flex flex-col items-center text-center space-y-4 pt-4 md:pt-8">
+          <div className="lg:hidden flex flex-col items-center text-center space-y-4 pt-0 md:pt-8">
             {/* Text First on Mobile */}
             <div className="space-y-3 z-10 w-full">
               {/* Available for Work Badge */}
