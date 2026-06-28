@@ -174,7 +174,7 @@ export default function Footer() {
             </div>
 
             {/* Right - Contact Info */}
-            <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
+            <div className="flex flex-wrap gap-12 sm:gap-16 md:gap-24">
               <div className="space-y-4">
                 <h4 className="text-xs md:text-sm uppercase tracking-[0.3em] text-white/60 font-medium mb-4 md:mb-6">
                   Contact
@@ -183,7 +183,7 @@ export default function Footer() {
                   <button
                     onClick={handleCopyEmail}
                     data-cursor-label={copied ? "Copied!" : "Click to copy"}
-                    className="flex items-center gap-2 text-sm md:text-base text-white/80 hover:text-white transition-colors duration-300 cursor-pointer text-left group"
+                    className="flex items-center gap-2 text-sm md:text-base text-white/80 hover:text-white transition-colors duration-300 cursor-pointer text-left group break-all"
                   >
                     raveeshanethmina@gmail.com
                   </button>
