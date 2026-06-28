@@ -8,17 +8,20 @@ export default function Navbar() {
   const isMobile = useRef(typeof window !== "undefined" && window.innerWidth < 1024);
 
   const scrollToSection = useCallback((sectionId) => {
-    if (isMobile.current) {
+    const currentIsMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+    
+    if (currentIsMobile) {
       const el = document.getElementById(sectionId) || document.querySelector(`#${sectionId}`);
       if (sectionId === "contact") {
         const footer = document.querySelector("footer");
         if (footer) footer.scrollIntoView({ behavior: "smooth" });
       } else if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     } else {
       const vh = window.innerHeight;
-      const targets = { about: vh, projects: vh * 2, contact: null };
+      // Offsets matching panelScroll.js: About=1vh, Experience=3vh, Projects=4vh, Gallery=10vh
+      const targets = { about: vh, experience: vh * 3, projects: vh * 4, gallery: vh * 10, contact: null };
       if (sectionId === "contact") {
         const footer = document.querySelector("footer");
         if (footer) window.scrollTo({ top: footer.offsetTop, behavior: "smooth" });
@@ -54,7 +57,7 @@ export default function Navbar() {
         }
 
         // Detect active section on mobile
-        const sections = ["projects", "about", "hero"];
+        const sections = ["gallery", "projects", "experience", "about", "hero"];
         for (const id of sections) {
           const el = document.getElementById(id);
           if (el && el.getBoundingClientRect().top <= vh * 0.4) {
@@ -75,10 +78,14 @@ export default function Navbar() {
         // Detect active section based on scroll progress
         if (y < vh * 0.5) {
           setActiveSection("hero");
-        } else if (y < vh * 1.5) {
+        } else if (y < vh * 2.5) {
           setActiveSection("about");
-        } else if (y < vh * 6) {
+        } else if (y < vh * 3.5) {
+          setActiveSection("experience");
+        } else if (y < vh * 9) {
           setActiveSection("projects");
+        } else if (y < vh * 10) {
+          setActiveSection("gallery");
         } else {
           setActiveSection("contact");
         }
@@ -94,7 +101,9 @@ export default function Navbar() {
 
   const navItems = [
     { id: "about", label: "About" },
+    { id: "experience", label: "Experience" },
     { id: "projects", label: "Projects" },
+    { id: "gallery", label: "Shots" },
     { id: "contact", label: "Contact" },
   ];
 
@@ -135,7 +144,7 @@ export default function Navbar() {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`
-                relative font-rockSalt text-[15px] transition-all duration-300 ease-out cursor-pointer
+                relative font-rockSalt text-[13px] md:text-[14px] transition-all duration-300 ease-out cursor-pointer
                 active:scale-95 touch-none select-none
                 ${isActive
                   ? "text-[#3e2723] [-webkit-text-stroke:0.3px_#3e2723]"

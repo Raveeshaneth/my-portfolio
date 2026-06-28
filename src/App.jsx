@@ -5,8 +5,10 @@ import ImagePreloader from "./components/ImagePreloader";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import ProjectsMobile from "./components/ProjectsMobile";
+import Gallery from "./components/Gallery";
 import Footer from "./components/Footer";
 import CustomCursor from "./components/CustomCursor";
 
@@ -43,7 +45,9 @@ export default function App() {
         <>
           <Hero />
           <About />
+          <Experience />
           <ProjectsMobile />
+          <Gallery />
           <Footer />
         </>
       ) : (
@@ -57,8 +61,16 @@ export default function App() {
               <About />
             </section>
 
+            <section className="panel" id="experience">
+              <Experience />
+            </section>
+
             <section className="panel" id="projects">
               <Projects />
+            </section>
+
+            <section className="panel" id="gallery">
+              <Gallery />
             </section>
           </main>
 

@@ -55,7 +55,7 @@ const PROJECTS = [
   },
   {
     id: 4, icon: androidIcon, image: project1,
-    title: "Tuition Mgmt", subtitle: "Mobile App",
+    title: "EduPulse", subtitle: "Mobile App",
     category: "Mobile Application", year: "2024",
     tags: ["Android", "UI/UX"],
     description: "Complete mobile solution for managing tuition classes with attendance tracking and payment processing.",
@@ -130,8 +130,8 @@ const ProjectCard = React.memo(({ project, isActive, onClick }) => (
     )}
 
     {/* Label */}
-    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "8px 8px 7px" }}>
-      <p style={{ fontSize: 10, fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "8px 8px 9px" }}>
+      <p style={{ fontSize: 10, fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.3 }}>
         {project.title}
       </p>
     </div>
@@ -222,7 +222,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
             </h3>
 
             {/* Subtitle */}
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", letterSpacing: "0.08em", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", letterSpacing: "0.08em", margin: "0 0 16px 0" }}>
               {project.subtitle}
             </p>
 
@@ -231,7 +231,7 @@ const ProjectModal = React.memo(({ project, onClose }) => {
 
             {/* Description */}
             <p style={{
-              fontSize: 13, color: "rgba(255,255,255,0.7)",
+              fontSize: 13, color: "rgba(255,255,255,0.80)",
               lineHeight: 1.75, margin: "0 0 20px 0",
             }}>
               {project.description}
@@ -454,7 +454,7 @@ export default function ProjectsMobile() {
 
             {/* Subtitle */}
             <p style={{
-              fontSize: 13, color: "rgba(255,255,255,0.5)",
+              fontSize: 13, color: "rgba(255,255,255,0.65)",
               letterSpacing: "0.08em", margin: "0 0 14px 0", flexShrink: 0,
             }}>
               {activeProject.subtitle}
@@ -469,7 +469,7 @@ export default function ProjectsMobile() {
 
             {/* Description */}
             <p style={{
-              fontSize: 13, color: "rgba(255,255,255,0.65)",
+              fontSize: 13, color: "rgba(255,255,255,0.80)",
               lineHeight: 1.7, margin: "0 0 14px 0", flexShrink: 0,
               display: "-webkit-box", WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical", overflow: "hidden",
@@ -523,7 +523,7 @@ export default function ProjectsMobile() {
 
             {/* Tap hint */}
             <p style={{
-              fontSize: 10, color: "rgba(255,255,255,0.3)",
+              fontSize: 10, color: "rgba(255,255,255,0.50)",
               margin: "0 0 clamp(10px,2vh,20px) 0",
               letterSpacing: "0.05em", flexShrink: 0,
             }}>

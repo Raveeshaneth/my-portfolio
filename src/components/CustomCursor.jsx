@@ -12,9 +12,11 @@ export default function CustomCursor() {
   const cursorRef = useRef(null);
   const labelRef  = useRef(null);
   const pos       = useRef({ x: -200, y: -200 });
-  const rafId     = useRef(null);
-  const hovered   = useRef(false);
-  const [showLabel, setShowLabel] = useState(false);
+  const [showLabel, setShowLabel] = useState("");
+  const hoveredProject = useRef(false);
+  const hoveredLink = useRef(false);
+  const rafId = useRef(null);
+  const svgRef = useRef(null);
 
   useEffect(() => {
     const el = cursorRef.current;
@@ -25,38 +27,45 @@ export default function CustomCursor() {
 
     const onMove = (e) => {
       pos.current = { x: e.clientX, y: e.clientY };
+
+      // Determine what the mouse is currently hovering over
+      const target = e.target;
+      const isProject = target.closest("[data-cursor='view']");
+      const customLabelNode = target.closest("[data-cursor-label]");
+      const isLinkNode = target.closest("a, button, [role='button'], input, select, textarea, label, .cursor-pointer");
+
+      if (isProject) {
+        hoveredProject.current = true;
+        hoveredLink.current = false;
+        setShowLabel("VIEW");
+      } else if (customLabelNode) {
+        hoveredProject.current = false;
+        hoveredLink.current = true;
+        setShowLabel(customLabelNode.getAttribute("data-cursor-label"));
+      } else if (isLinkNode) {
+        hoveredProject.current = false;
+        hoveredLink.current = true;
+        setShowLabel("");
+      } else {
+        hoveredProject.current = false;
+        hoveredLink.current = false;
+        setShowLabel("");
+      }
     };
-
-    const onEnter = () => { hovered.current = true; };
-    const onLeave = () => { hovered.current = false; };
-
-    // Project card hover — show "VIEW" label
-    const onProjectEnter = () => { hovered.current = true; setShowLabel(true); };
-    const onProjectLeave = () => { hovered.current = false; setShowLabel(false); };
-
-    const attachHover = () => {
-      document.querySelectorAll(
-        "a, button, [role='button'], input, select, textarea, label"
-      ).forEach((node) => {
-        node.addEventListener("mouseenter", onEnter);
-        node.addEventListener("mouseleave", onLeave);
-      });
-
-      // Attach to project cards specifically
-      document.querySelectorAll("[data-cursor='view']").forEach((node) => {
-        node.addEventListener("mouseenter", onProjectEnter);
-        node.addEventListener("mouseleave", onProjectLeave);
-      });
-    };
-    attachHover();
-
-    const mo = new MutationObserver(attachHover);
-    mo.observe(document.body, { childList: true, subtree: true });
 
     const loop = () => {
       const { x, y } = pos.current;
-      const scale = hovered.current ? 1.18 : 1;
-      el.style.transform = `translate(${x - 4}px, ${y - 2}px) scale(${scale})`;
+      
+      const isLink = hoveredLink.current && !hoveredProject.current;
+      
+      el.style.transform = `translate(${x - 4}px, ${y - 2}px)`;
+      
+      if (svgRef.current) {
+        const scale = isLink ? 0 : 1;
+        svgRef.current.style.transform = `scale(${scale})`;
+        svgRef.current.style.opacity = isLink ? 0 : 1;
+      }
+      
       rafId.current = requestAnimationFrame(loop);
     };
 
@@ -68,13 +77,23 @@ export default function CustomCursor() {
       document.body.style.cursor = "";
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafId.current);
-      mo.disconnect();
     };
   }, []);
 
   return (
     <>
-      <style>{`*, *::before, *::after { cursor: none !important; }`}</style>
+      <style>{`
+        *, *::before, *::after { cursor: none !important; }
+        
+        a, button, [role='button'], input, select, textarea, label, .cursor-pointer,
+        a *, button *, [role='button'] *, input *, select *, textarea *, label *, .cursor-pointer * { 
+          cursor: pointer !important; 
+        }
+        
+        [data-cursor='view'], [data-cursor='view'] * {
+          cursor: none !important;
+        }
+      `}</style>
 
       <div
         ref={cursorRef}
@@ -92,11 +111,13 @@ export default function CustomCursor() {
         }}
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          ref={svgRef}
           width="24"
-          height="26"
-          viewBox="0 0 24 26"
-          style={{ display: "block" }}
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ display: "block", transition: "opacity 0.15s ease, transform 0.15s ease" }}
         >
           <path
             d="M4,2 L4,20 L8.5,15.5 L12,23 L14.5,22 L11,14.5 L17,14.5 Z"
@@ -113,7 +134,7 @@ export default function CustomCursor() {
           ref={labelRef}
           style={{
             position: "absolute",
-            top: -8,
+            top: -20,
             left: 28,
             padding: "3px 10px",
             borderRadius: 100,
@@ -131,7 +152,7 @@ export default function CustomCursor() {
             mixBlendMode: "normal",
           }}
         >
-          VIEW
+          {showLabel}
         </div>
       </div>
     </>

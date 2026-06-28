@@ -1,7 +1,42 @@
+import { useState } from "react";
 import logo from "../assets/logo.png";
+
+const marqueeRow1 = [
+  "Raveesha Nethmina Gonaduwa",
+  "✦",
+  "UI/UX Designer",
+  "✦",
+  "Available for Work",
+  "✦",
+  "Creative Problem Solver",
+  "✦",
+];
+
+const marqueeRow2 = [
+  "Raveesha Nethmina Gonaduwa",
+  "◆",
+  "Visual Design",
+  "◆",
+  "Raveesha Nethmina Gonaduwa",
+  "◆",
+  "User Experience",
+  "◆",
+  "Raveesha Nethmina Gonaduwa",
+  "◆",
+  "Design Systems",
+  "◆",
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText("raveeshanethmina@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const socialLinks = [
     {
@@ -34,9 +69,54 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="contact" className="relative bg-black text-white overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 opacity-[0.03]">
+    <footer id="contact" className="relative bg-black text-white overflow-hidden flex flex-col -mt-[1px]">
+      {/* ═══════ CINEMATIC MARQUEE (SEPARATOR) ═══════ */}
+      <div className="w-full bg-black py-5 overflow-hidden flex flex-col justify-center relative z-20 border-t border-black">
+        {/* Row 1 — scrolls left */}
+        <div className="flex whitespace-nowrap mb-2 marquee-row-1">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex shrink-0">
+              {marqueeRow1.map((item, j) => (
+                <span
+                  key={`${dup}-${j}`}
+                  className={`mx-4 lg:mx-6 text-[14px] lg:text-[16px] font-medium ${item === "✦" ? "text-[#a1887f]/60" : "text-white/60"
+                    }`}
+                  style={{
+                    fontFamily: item === "✦" ? "inherit" : "'Inter', sans-serif",
+                    letterSpacing: item === "✦" ? "0" : "0.05em",
+                  }}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2 — scrolls right */}
+        <div className="flex whitespace-nowrap marquee-row-2">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex shrink-0">
+              {marqueeRow2.map((item, j) => (
+                <span
+                  key={`${dup}-${j}`}
+                  className={`mx-4 lg:mx-6 text-[12px] lg:text-[14px] font-medium ${item === "◆" ? "text-[#8d6e63]/50" : "text-white/40"
+                    }`}
+                  style={{
+                    fontFamily: item === "◆" ? "inherit" : "'Inter', sans-serif",
+                    letterSpacing: item === "◆" ? "0" : "0.05em",
+                  }}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Subtle grid background for the contact info area */}
+      <div className="absolute inset-0 top-[100px] opacity-[0.03]">
         <div className="absolute inset-0" style={{
           backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
           backgroundSize: '40px 40px'
@@ -44,30 +124,35 @@ export default function Footer() {
       </div>
 
       {/* Ambient glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-[#6d4c41]/10 to-transparent rounded-full blur-3xl" />
+      <div className="absolute top-[100px] left-1/4 w-96 h-96 bg-gradient-to-br from-[#6d4c41]/10 to-transparent rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-[#8d6e63]/8 to-transparent rounded-full blur-3xl" />
 
-      <div className="relative px-6 md:px-12 lg:px-20 py-12 md:py-16 lg:py-20">
-        <div className="max-w-[1600px] mx-auto">
-          
+      <div className="relative px-6 md:px-12 lg:px-20 pt-12 pb-4 lg:pt-16 lg:pb-6 z-10 flex-1 flex flex-col justify-center">
+        <div className="max-w-[1600px] mx-auto w-full">
+
           {/* Top Section */}
-          <div className="grid md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 mb-12 md:mb-16">
-            
+          <div className="grid lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-24 mb-8 lg:mb-12">
+
             {/* Left - CTA */}
-            <div className="space-y-4 md:space-y-6">
-              <h3 className="font-rockSalt text-[36px] md:text-[48px] lg:text-[64px] leading-none tracking-tight">
-                Let's work
-                <br />
-                together
-              </h3>
+            <div className="space-y-6">
+              <div>
+                <span className="font-rockSalt text-xl md:text-2xl text-[#a1887f] block mb-4">
+                  Ready to start?
+                </span>
+                <h3 className="font-extrabold text-[52px] md:text-[72px] lg:text-[96px] leading-[0.9] tracking-tighter">
+                  Let's work
+                  <br />
+                  <span className="text-white/40">together.</span>
+                </h3>
+              </div>
               <p className="text-base md:text-lg text-white/60 max-w-md leading-relaxed">
                 I'm always excited to connect with teams and individuals who value thoughtful design. Let's create something extraordinary.
               </p>
-              <div className="flex flex-wrap gap-3 md:gap-4">
-                <a 
+              <div className="flex flex-wrap gap-4 pt-2">
+                <a
                   id="get-in-touch-btn"
                   href="mailto:raveeshanethmina@gmail.com"
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 hover:scale-105 text-sm md:text-base"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 hover:scale-105 text-sm cursor-pointer"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -75,10 +160,10 @@ export default function Footer() {
                   </svg>
                   Get in touch
                 </a>
-                <a 
-                  href="/Raveesha-Nethmina-CV.pdf"
-                  download="Raveesha-Nethmina-CV.pdf"
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-105 text-sm md:text-base"
+                <a
+                  href="/Raveesha%20Nethmina%20UIUX%20Intern%20CV.pdf"
+                  download="Raveesha Nethmina UIUX Intern CV.pdf"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-105 text-sm cursor-pointer"
                 >
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -91,17 +176,23 @@ export default function Footer() {
             {/* Right - Contact Info */}
             <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
               <div className="space-y-4">
-                <h4 className="text-xs md:text-sm uppercase tracking-[0.3em] text-white/40 font-medium mb-4 md:mb-6">
+                <h4 className="text-xs md:text-sm uppercase tracking-[0.3em] text-white/60 font-medium mb-4 md:mb-6">
                   Contact
                 </h4>
                 <div className="space-y-2 md:space-y-3 text-sm md:text-base text-white/80">
-                  <a href="mailto:raveeshanethmina@gmail.com" className="block text-sm md:text-base text-white/80 hover:text-white transition-colors duration-300">raveeshanethmina@gmail.com</a>
+                  <button
+                    onClick={handleCopyEmail}
+                    data-cursor-label={copied ? "Copied!" : "Click to copy"}
+                    className="flex items-center gap-2 text-sm md:text-base text-white/80 hover:text-white transition-colors duration-300 cursor-pointer text-left group"
+                  >
+                    raveeshanethmina@gmail.com
+                  </button>
                   <p>Colombo, Sri Lanka</p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-xs md:text-sm uppercase tracking-[0.3em] text-white/40 font-medium mb-4 md:mb-6">
+                <h4 className="text-xs md:text-sm uppercase tracking-[0.3em] text-white/60 font-medium mb-4 md:mb-6">
                   Social
                 </h4>
                 <div className="space-y-3 md:space-y-4">
@@ -111,9 +202,9 @@ export default function Footer() {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-sm md:text-base text-white/70 hover:text-white transition-all duration-300 group"
+                      className="flex items-center gap-3 text-sm md:text-base text-white/80 hover:text-white transition-all duration-300 group cursor-pointer"
                     >
-                      <span className="text-white/40 group-hover:text-white/80 transition-colors duration-300">
+                      <span className="text-white/60 group-hover:text-white/90 transition-colors duration-300">
                         {link.icon}
                       </span>
                       {link.name}
@@ -127,28 +218,25 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6 md:mb-8" />
-
           {/* Bottom Section */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-            
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-white/[0.04]">
+
             {/* Logo */}
-            <button 
+            <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
               aria-label="Back to top"
             >
-              <img src={logo} alt="Raveesha Nethmina logo" className="w-8 h-8 md:w-10 md:h-10 object-contain invert" />
-              <span className="text-white/60 text-xs md:text-sm">
+              <img src={logo} alt="Raveesha Nethmina logo" className="w-6 h-6 md:w-8 md:h-8 object-contain invert" />
+              <span className="text-white/70 text-xs md:text-sm">
                 Raveesha Nethmina Gonaduwa
               </span>
             </button>
 
             {/* Copyright */}
-            <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 lg:gap-8 text-xs md:text-sm text-white/40">
+            <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 lg:gap-8 text-xs md:text-sm text-white/55">
               <p>© {currentYear} All rights reserved</p>
-              <p className="text-white/20">Designed & Built with ♥</p>
+              <p className="text-white/40">Designed & Built with ♥</p>
             </div>
           </div>
         </div>

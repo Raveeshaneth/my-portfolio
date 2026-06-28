@@ -15,7 +15,10 @@ export function setupPanelScroll() {
   }
   ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-  gsap.set(panels.slice(1), { yPercent: 100, opacity: 1 });
+  gsap.set(panels.slice(1), { 
+    yPercent: 100, 
+    opacity: 1
+  });
   gsap.set(panels[0], { yPercent: 0, opacity: 1 });
 
   const tl = gsap.timeline({
@@ -23,20 +26,33 @@ export function setupPanelScroll() {
   });
 
   // Slide Hero → About
-  tl.to(panels[1], { yPercent: 0, duration: 1 });
+  // Previous panel (panels[0]) remains perfectly still
+  tl.to(panels[1], { yPercent: 0, duration: 1 }, 0);
 
-  // Slide About → Projects
-  tl.to(panels[2], { yPercent: 0, duration: 1 });
+  // Hold for About horizontal card scroll (Card 1 → Card 2)
+  tl.to({}, { duration: 1 });
+
+  // Slide About → Experience
+  const timeAboutEnd = tl.duration();
+  tl.to(panels[2], { yPercent: 0, duration: 1 }, timeAboutEnd);
+
+  // Slide Experience → Projects
+  const timeExpEnd = tl.duration();
+  tl.to(panels[3], { yPercent: 0, duration: 1 }, timeExpEnd);
 
   const TOTAL_PROJECTS = 5; // must match PROJECTS.length in Projects.jsx
 
-  // Steps: 1 (hero→about) + 1 (about→projects) + 8 (one step per project) = 10
-  // This gives each project its own dedicated snap point
-  const PANEL_STEPS = 2;
-  const totalSteps = PANEL_STEPS + TOTAL_PROJECTS; // = 10
+  // Steps: 1 (hero→about) + 1 (about hold) + 1 (about→experience) + 1 (experience→projects) + 5 projects + 1 (projects→gallery) = 10
+  const PANEL_STEPS = 4;
+  const GALLERY_STEP = 1;
+  const totalSteps = PANEL_STEPS + TOTAL_PROJECTS + GALLERY_STEP;
 
   // Hold duration matches exactly TOTAL_PROJECTS steps
   tl.to({}, { duration: TOTAL_PROJECTS });
+
+  // Slide Projects → Gallery
+  const timeProjEnd = tl.duration();
+  tl.to(panels[4], { yPercent: 0, duration: 1 }, timeProjEnd);
 
   let lastDispatchedIndex = -1;
   const dispatchProjectChange = (index) => {
@@ -48,11 +64,7 @@ export function setupPanelScroll() {
     }
   };
 
-  // Build explicit snap points: panel snaps + one per project
-  // Panel snaps: 0, 1/10, 2/10
-  // Project snaps: 2/10, 3/10, 4/10, 5/10, 6/10, 7/10, 8/10, 9/10, 10/10
-  // But we need project[7] at progress=1.0, so we space them so that
-  // project[i] lands at (PANEL_STEPS + i) / totalSteps
+  // Build explicit snap points
   const snapPoints = [];
   for (let i = 0; i <= totalSteps; i++) {
     snapPoints.push(i / totalSteps);
@@ -73,16 +85,32 @@ export function setupPanelScroll() {
     },
     onUpdate: (self) => {
       const progress = self.progress;
-      const projectsStart = PANEL_STEPS / totalSteps; // 2/10 = 0.2
 
-      if (progress >= projectsStart) {
-        // Each project occupies exactly 1/totalSteps of progress
-        // project[i] is active when progress is in [(2+i)/10, (3+i)/10)
-        const projectProgress = (progress - projectsStart) / (1 - projectsStart);
+      // ── About horizontal sub-scroll ──
+      const aboutHoldStart = 1 / totalSteps;
+      const aboutHoldEnd = 2 / totalSteps;
+
+      let aboutP = 0;
+      if (progress >= aboutHoldEnd) {
+        aboutP = 1;
+      } else if (progress >= aboutHoldStart) {
+        aboutP = (progress - aboutHoldStart) / (aboutHoldEnd - aboutHoldStart);
+      }
+      window.dispatchEvent(new CustomEvent("aboutSubScroll", {
+        detail: { progress: aboutP },
+      }));
+
+      // ── Project cycling ──
+      const projectsStart = PANEL_STEPS / totalSteps;
+      const projectsEnd = (PANEL_STEPS + TOTAL_PROJECTS) / totalSteps;
+
+      if (progress >= projectsStart && progress < projectsEnd) {
+        const projectProgress = (progress - projectsStart) / (projectsEnd - projectsStart);
         const rawIndex = projectProgress * (TOTAL_PROJECTS - 1);
-        // Use round so the last project is reachable at progress=1.0
         const projectIndex = Math.min(Math.round(rawIndex), TOTAL_PROJECTS - 1);
         dispatchProjectChange(projectIndex);
+      } else if (progress >= projectsEnd) {
+        dispatchProjectChange(TOTAL_PROJECTS - 1);
       } else {
         dispatchProjectChange(0);
       }

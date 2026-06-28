@@ -27,9 +27,9 @@ const PROJECTS = [
   {
     id: 1, icon: figmaIcon, image: project7,
     title: "AccessHive", subtitle: "Mixed Reality",
-    category: "Accessibility System", year: "2024",
+    category: "Accessibility System", year: "2025",
     tags: ["AI", "Accessibility", "XR"],
-    description: "2050 mixed-reality accessibility system helping blind and low-vision users navigate safely with AI scene understanding, spatial audio, haptic feedback, and real-time volunteer assistance.",
+    description: "AI and XR accessibility platform for visually impaired users, applying WCAG guidelines and inclusive design principles with AI-based navigation features.",
     color: "#63a2a9",
     figmaUrl: "https://www.figma.com/design/FK0NPX5KJvSb0hhA1fnD5Y/AccessHive?node-id=15-190&t=kQXKX5k8swgSsaNR-1",
     isFigma: true,
@@ -37,9 +37,9 @@ const PROJECTS = [
   {
     id: 2, icon: figmaIcon, image: project3,
     title: "UrbanFood", subtitle: "E-Commerce",
-    category: "Web Application", year: "2023",
-    tags: ["E-commerce", "UX"],
-    description: "Fresh food delivery platform with intuitive product browsing and seamless checkout experience.",
+    category: "Web Application", year: "2025",
+    tags: ["E-commerce", "UX", "React"],
+    description: "E-commerce food ordering website with full UI/UX designed in Figma, integrating customer feedback and authentication features.",
     color: "#2bac48",
     figmaUrl: "https://www.figma.com/design/j9d9i0F2v1jCXFXCBSNtst/Urbanfood?node-id=0-1&t=iAmMHaOCF0s68CR3-1",
     isFigma: true,
@@ -47,19 +47,19 @@ const PROJECTS = [
   {
     id: 3, icon: figmaIcon, image: project2,
     title: "Mentora AI", subtitle: "Web Platform",
-    category: "Web Application", year: "2024",
-    tags: ["Web", "AI/ML"],
-    description: "AI-powered educational platform with personalized learning paths and intelligent progress tracking.",
+    category: "Web Application", year: "2025",
+    tags: ["Web", "AI/ML", "Next.js"],
+    description: "AI-powered educational platform built with Next.js, Tailwind CSS, Firebase, and OpenAI API. Led complete UI/UX design with user authentication flows.",
     color: "#7C5CFF",
     figmaUrl: "https://www.figma.com/design/qJvXV3kTY2R0ygHxwb99Rg/Mentora?node-id=0-1&t=ZsSpWgUcLbbwPCXO-1",
     isFigma: true,
   },
   {
     id: 4, icon: androidIcon, image: project1,
-    title: "Tuition Management", subtitle: "Mobile App",
-    category: "Mobile Application", year: "2024",
-    tags: ["Android", "UI/UX"],
-    description: "Complete mobile solution for managing tuition classes with attendance tracking and payment processing.",
+    title: "Edu Pulse", subtitle: "Mobile App",
+    category: "Mobile Application", year: "2025",
+    tags: ["Android", "UI/UX", "Firebase"],
+    description: "Android tuition management system with role-based dashboards for students, teachers, and admins, featuring secure login flows and attendance tracking.",
     color: "#8670f7", isFigma: false,
   },
 ];
@@ -102,11 +102,11 @@ const ProjectCard = React.memo(({ project, isActive, index, activeIndex, isTrans
           <img src={project.icon} alt="" style={{ width: "32%", height: "32%", objectFit: "contain", filter: "invert(1)", opacity: isActive ? 0.9 : 0.4 }} loading="eager" decoding="async" />
         </div>
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, ${project.color}cc 0%, ${project.color}22 55%, transparent 85%)` }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "5px 5px 4px" }}>
-          <p style={{ fontSize: "clamp(7px,0.85vw,9px)", fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "5px 6px 6px" }}>
+          <p style={{ fontSize: "clamp(7px,0.85vw,9px)", fontWeight: 700, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.3 }}>
             {project.title}
           </p>
-          <p style={{ fontSize: "clamp(5px,0.65vw,7px)", color: "rgba(255,255,255,0.55)", margin: "1px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <p style={{ fontSize: "clamp(5px,0.65vw,7px)", color: "rgba(255,255,255,0.70)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.3 }}>
             {project.subtitle}
           </p>
         </div>
@@ -305,7 +305,7 @@ export default function Projects() {
 
           {/* Heading */}
           <h2 className="font-rockSalt" style={{
-            fontSize: "clamp(24px,4.5vw,60px)",
+            fontSize: "clamp(28px,5vw,64px)",
             color: "#fff", lineHeight: 1, letterSpacing: "-0.01em",
             margin: "0 0 clamp(12px,2vh,28px) 0",
             flexShrink: 0,
@@ -339,7 +339,7 @@ export default function Projects() {
 
           {/* Subtitle */}
           <p style={{
-            fontSize: "clamp(11px,1.1vw,15px)", color: "rgba(255,255,255,0.5)",
+            fontSize: "clamp(11px,1.1vw,15px)", color: "rgba(255,255,255,0.65)",
             letterSpacing: "0.08em", margin: "0 0 clamp(6px,1vh,14px) 0",
             flexShrink: 0,
           }}>
@@ -355,7 +355,7 @@ export default function Projects() {
 
           {/* Description */}
           <p style={{
-            fontSize: "clamp(11px,1vw,14px)", color: "rgba(255,255,255,0.6)",
+            fontSize: "clamp(11px,1vw,14px)", color: "rgba(255,255,255,0.75)",
             lineHeight: 1.7, maxWidth: "55ch",
             margin: "0 0 clamp(8px,1.2vh,16px) 0",
             flexShrink: 0,
